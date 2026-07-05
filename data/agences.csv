@@ -1,0 +1,21 @@
+agence_id,nom_agence,ville,region,date_ouverture,type_agence,statut,date_fermeture
+1,Agence Rabat 01,Rabat,Rabat-Sale-Kenitra,2000-11-06,rurale,fermee,2022-02-25
+2,Agence Fes 02,Fes,Fes-Meknes,2007-08-05,premium,fermee,2019-08-05
+3,Agence Rabat 03,Rabat,Rabat-Sale-Kenitra,2018-07-22,premium,fermee,2019-05-16
+4,Agence Meknes 04,Meknes,Fes-Meknes,2001-01-29,urbaine,active,
+5,Agence Rabat 05,Rabat,Rabat-Sale-Kenitra,2007-06-10,urbaine,active,
+6,Agence Kenitra 06,Kenitra,Rabat-Sale-Kenitra,2000-11-25,premium,active,
+7,Agence Fes 07,Fes,Fes-Meknes,2018-07-17,rurale,active,
+8,Agence Fes 08,Fes,Fes-Meknes,2015-04-14,premium,active,
+9,Agence Tanger 09,Tanger,Tanger-Tetouan-Al Hoceima,2000-03-21,urbaine,active,
+10,Agence Meknes 10,Meknes,Fes-Meknes,2011-07-30,rurale,active,
+11,Agence Marrakech 11,Marrakech,Marrakech-Safi,2007-04-29,rurale,active,
+12,Agence Rabat 12,Rabat,Rabat-Sale-Kenitra,2003-02-26,rurale,active,
+13,Agence Rabat 13,Rabat,Rabat-Sale-Kenitra,2012-03-19,rurale,active,
+14,Agence Tetouan 14,Tetouan,Tanger-Tetouan-Al Hoceima,2008-12-31,urbaine,active,
+15,Agence Oujda 15,Oujda,Oriental,2018-03-31,urbaine,active,
+16,Agence Meknes 16,Meknes,Fes-Meknes,2002-09-06,premium,active,
+17,Agence Tanger 17,Tanger,Tanger-Tetouan-Al Hoceima,2012-04-21,premium,active,
+18,Agence Fes 18,Fes,Fes-Meknes,2002-05-14,urbaine,active,
+19,Agence Fes 19,Fes,Fes-Meknes,2009-11-05,urbaine,active,
+20,Agence Fes 20,Fes,Fes-Meknes,2003-06-09,rurale,active,

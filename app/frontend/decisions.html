@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decisions Admin — Al Barid Bank DQ</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brown:#6B4C3B; --brown-dark:#4A3328; --brown-mid:#7D5A4A;
+      --yellow:#E8A020; --yellow-light:#FFF3DC; --yellow-dark:#C8881A;
+      --bg:#F7F5F3; --card:#FFFFFF; --text:#2C1F18; --muted:#8B7B72; --border:#E8E0DA;
+      --success:#15803D; --danger:#B91C1C; --danger-light:#FEE2E2; --sidebar-w:240px;
+    }
+    body { font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; font-size:14px; }
+    .sidebar { width:var(--sidebar-w); background:var(--brown-dark); display:flex; flex-direction:column; position:fixed; top:0; left:0; height:100vh; z-index:200; }
+    .sidebar-logo { padding:20px 18px 14px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .sidebar-logo img { width:145px; display:block; filter:brightness(0) invert(1); }
+    .sidebar-logo-text { color:#fff; font-size:15px; font-weight:800; display:none; }
+    .sidebar-subtitle { font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1.2px; margin-top:7px; }
+    .sidebar nav { padding:10px 0; flex:1; }
+    .nav-item { display:flex; align-items:center; gap:10px; padding:11px 18px; color:rgba(255,255,255,0.65); text-decoration:none; font-size:13px; border-left:3px solid transparent; transition:all 0.18s; }
+    .nav-item:hover { background:rgba(255,255,255,0.07); color:#fff; border-left-color:var(--yellow); }
+    .nav-item.active { background:rgba(232,160,32,0.13); color:var(--yellow); border-left-color:var(--yellow); font-weight:600; }
+    .nav-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.3); flex-shrink:0; }
+    .nav-item.active .nav-dot { background:var(--yellow); }
+    .sidebar-footer { padding:14px 18px; font-size:11px; color:rgba(255,255,255,0.2); border-top:1px solid rgba(255,255,255,0.06); line-height:1.6; }
+    .main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; }
+    .topbar { background:var(--card); border-bottom:1px solid var(--border); padding:0 28px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
+    .topbar-title { font-size:16px; font-weight:700; color:var(--brown-dark); }
+    .content { padding:24px 28px; }
+    .card { background:var(--card); border-radius:10px; border:1px solid var(--border); overflow:hidden; margin-bottom:18px; }
+    .card-header { padding:13px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .card-title { font-size:13px; font-weight:700; color:var(--brown-dark); }
+
+    /* Stats row */
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+    .stat-card { background:var(--card); border-radius:8px; border:1px solid var(--border); padding:16px 18px; }
+    .stat-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); margin-bottom:8px; }
+    .stat-value { font-size:24px; font-weight:800; color:var(--brown-dark); }
+    .stat-card.accepted .stat-value { color:var(--success); }
+    .stat-card.rejected .stat-value { color:var(--danger); }
+    .stat-card.high     .stat-value { color:#E05C2A; }
+
+    /* Filters */
+    .filters-bar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+    .filter-tabs { display:flex; gap:0; border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+    .filter-tab { padding:7px 16px; font-size:12px; font-weight:600; cursor:pointer; border:none; background:var(--card); color:var(--muted); font-family:inherit; transition:all 0.16s; }
+    .filter-tab.active { background:var(--brown-dark); color:#fff; }
+    .filter-tab:hover:not(.active) { background:var(--bg); }
+    select { padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:var(--card); color:var(--text); font-family:inherit; }
+
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:var(--bg); padding:9px 16px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); font-weight:700; border-bottom:1px solid var(--border); white-space:nowrap; }
+    td { padding:10px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:#FDFAF8; }
+    .badge { display:inline-flex; align-items:center; padding:2px 9px; border-radius:10px; font-size:10px; font-weight:700; white-space:nowrap; }
+    .badge-accepted   { background:#D1FAE5; color:#065F46; }
+    .badge-rejected   { background:#FEE2E2; color:#991B1B; }
+    .badge-high       { background:#FEE2E2; color:#991B1B; }
+    .badge-medium     { background:#FEF3C7; color:#92400E; }
+    .badge-low        { background:#D1FAE5; color:#065F46; }
+    .btn { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:6px; border:1px solid var(--border); background:var(--card); cursor:pointer; font-size:12px; font-weight:600; color:var(--text); transition:all 0.16s; font-family:inherit; white-space:nowrap; }
+    .btn:hover { background:var(--bg); }
+    .btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .pagination { display:flex; align-items:center; gap:8px; padding:12px 20px; border-top:1px solid var(--border); justify-content:flex-end; }
+    .pag-info { font-size:12px; color:var(--muted); margin-right:auto; }
+    .loading { display:flex; align-items:center; justify-content:center; padding:40px; color:var(--muted); gap:10px; }
+    .spinner { width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--brown); border-radius:50%; animation:spin 0.75s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    td code { font-size:11px; color:var(--brown-dark); background:var(--bg); padding:1px 5px; border-radius:3px; }
+    .comment-cell { max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--muted); font-size:12px; }
+    .empty { text-align:center; padding:40px; color:var(--muted); font-size:13px; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="/static/logo_ABB.png" alt="Al Barid Bank"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <div class="sidebar-logo-text">AL BARID BANK</div>
+    <div class="sidebar-subtitle">Data Quality Platform</div>
+  </div>
+  <nav>
+    <a href="/" class="nav-item"><span class="nav-dot"></span> Dashboard</a>
+    <a href="/anomalies" class="nav-item"><span class="nav-dot"></span> Anomalies</a>
+    <a href="/decisions" class="nav-item active"><span class="nav-dot"></span> Decisions Admin</a>
+  </nav>
+  <div class="sidebar-footer">Al Barid Bank &copy; 2025<br>Division Data &amp; BI</div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Decisions Administrateur</div>
+    <button class="btn" onclick="loadAll()">Actualiser</button>
+  </div>
+
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Total decisions</div>
+        <div class="stat-value" id="stat-total"><div class="spinner"></div></div>
+      </div>
+      <div class="stat-card accepted">
+        <div class="stat-label">Acceptees</div>
+        <div class="stat-value" id="stat-accepted"><div class="spinner"></div></div>
+      </div>
+      <div class="stat-card rejected">
+        <div class="stat-label">Rejetees</div>
+        <div class="stat-value" id="stat-rejected"><div class="spinner"></div></div>
+      </div>
+      <div class="stat-card high">
+        <div class="stat-label">Severite elevee</div>
+        <div class="stat-value" id="stat-high"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- Filters + Table -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Historique des decisions</span>
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="setDecisionFilter('')">Toutes</button>
+          <button class="filter-tab" onclick="setDecisionFilter('accepted')">Acceptees</button>
+          <button class="filter-tab" onclick="setDecisionFilter('rejected')">Rejetees</button>
+        </div>
+      </div>
+
+      <div style="padding:12px 20px; border-bottom:1px solid var(--border); display:flex; gap:10px;">
+        <select id="filter-rule" onchange="applyFilters()">
+          <option value="">Toutes les regles</option>
+          <option value="TX_GAB_SANS_ID">TX_GAB_SANS_ID</option>
+          <option value="TX_NON_GAB_AVEC_ID">TX_NON_GAB_AVEC_ID</option>
+          <option value="CARTE_ACTIVE_COMPTE_CLOTURE">CARTE_ACTIVE_COMPTE_CLOTURE</option>
+          <option value="TX_COMPTE_INEXISTANT">TX_COMPTE_INEXISTANT</option>
+          <option value="CLIENT_AGENCE_FERMEE">CLIENT_AGENCE_FERMEE</option>
+          <option value="CLIENT_ID_DUPLIQUE">CLIENT_ID_DUPLIQUE</option>
+          <option value="EMAIL_FORMAT_INVALIDE">EMAIL_FORMAT_INVALIDE</option>
+          <option value="COMPTE_CLIENT_INEXISTANT">COMPTE_CLIENT_INEXISTANT</option>
+          <option value="DIGITAL_CLIENT_INEXISTANT">DIGITAL_CLIENT_INEXISTANT</option>
+          <option value="TX_OBSOLETE">TX_OBSOLETE</option>
+        </select>
+        <select id="filter-severity" onchange="applyFilters()">
+          <option value="">Toute severite</option>
+          <option value="high">Elevee</option>
+          <option value="medium">Moyenne</option>
+          <option value="low">Faible</option>
+        </select>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Regle</th>
+              <th>Table</th>
+              <th>ID Enreg.</th>
+              <th>Decision</th>
+              <th>Severite</th>
+              <th>Commentaire</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="decisions-body">
+            <tr><td colspan="8"><div class="loading"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <span class="pag-info" id="pag-info"></span>
+        <button class="btn" id="btn-prev" onclick="prevPage()">Precedent</button>
+        <button class="btn" id="btn-next" onclick="nextPage()">Suivant</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentDecision = '', currentOffset = 0;
+const PAGE = 25;
+
+function fmt(n) { return (n||0).toLocaleString('fr-FR'); }
+
+function fmtDate(s) {
+  if (!s) return '—';
+  try { return new Date(s).toLocaleDateString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+  catch(e) { return s; }
+}
+
+async function api(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+async function loadStats() {
+  try {
+    const s = await api('/api/decisions/stats');
+    document.getElementById('stat-total').textContent    = fmt(s.total);
+    document.getElementById('stat-accepted').textContent = fmt(s.accepted);
+    document.getElementById('stat-rejected').textContent = fmt(s.rejected);
+    document.getElementById('stat-high').textContent     = fmt(s.high_severity);
+  } catch(e) {
+    ['stat-total','stat-accepted','stat-rejected','stat-high'].forEach(id => {
+      document.getElementById(id).textContent = '—';
+    });
+  }
+}
+
+async function loadDecisions() {
+  const tbody = document.getElementById('decisions-body');
+  tbody.innerHTML = '<tr><td colspan="8"><div class="loading"><div class="spinner"></div></div></td></tr>';
+
+  const rule     = document.getElementById('filter-rule').value;
+  const severity = document.getElementById('filter-severity').value;
+
+  let url = '/api/decisions/?limit=' + PAGE + '&offset=' + currentOffset;
+  if (currentDecision) url += '&decision=' + currentDecision;
+  if (rule)            url += '&rule_id='  + rule;
+  if (severity)        url += '&severity=' + severity;
+
+  try {
+    const d = await api(url);
+    if (!d.data || !d.data.length) {
+      tbody.innerHTML = '<tr><td colspan="8"><div class="empty">Aucune decision enregistree</div></td></tr>';
+      document.getElementById('pag-info').textContent = '';
+      document.getElementById('btn-prev').disabled = true;
+      document.getElementById('btn-next').disabled = true;
+      return;
+    }
+    tbody.innerHTML = d.data.map(r =>
+      '<tr>' +
+      '<td style="color:var(--muted);font-size:12px;">' + r.id + '</td>' +
+      '<td><code>' + r.rule_id + '</code></td>' +
+      '<td style="color:var(--muted);font-size:12px;">' + r.table_name + '</td>' +
+      '<td style="font-family:monospace;font-size:12px;">' + r.record_id + '</td>' +
+      '<td><span class="badge badge-' + r.decision + '">' + (r.decision === 'accepted' ? 'Accepte' : 'Rejete') + '</span></td>' +
+      '<td><span class="badge badge-' + r.severity + '">' + r.severity + '</span></td>' +
+      '<td><div class="comment-cell" title="' + (r.comment||'') + '">' + (r.comment||'—') + '</div></td>' +
+      '<td style="font-size:12px;white-space:nowrap;">' + fmtDate(r.decided_at) + '</td>' +
+      '</tr>'
+    ).join('');
+    const total = d.total;
+    const page  = Math.floor(currentOffset / PAGE) + 1;
+    const pages = Math.ceil(total / PAGE) || 1;
+    document.getElementById('pag-info').textContent = 'Page ' + page + ' / ' + pages + ' — ' + fmt(total) + ' decisions';
+    document.getElementById('btn-prev').disabled = currentOffset === 0;
+    document.getElementById('btn-next').disabled = currentOffset + PAGE >= total;
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;color:red;">Erreur de chargement</td></tr>';
+  }
+}
+
+function setDecisionFilter(val) {
+  currentDecision = val; currentOffset = 0;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  loadDecisions();
+}
+
+function applyFilters() { currentOffset = 0; loadDecisions(); }
+function prevPage() { currentOffset = Math.max(0, currentOffset - PAGE); loadDecisions(); }
+function nextPage() { currentOffset += PAGE; loadDecisions(); }
+
+async function loadAll() { await Promise.all([loadStats(), loadDecisions()]); }
+loadAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+gab_id,agence_id,type_gab,ville,statut
+1,16,depot,Meknes,en panne
+2,19,mixte,Fes,hors service
+3,16,distributeur,Meknes,hors service
+4,13,mixte,Rabat,en panne
+5,5,distributeur,Rabat,operationnel
+6,6,distributeur,Kenitra,operationnel
+7,17,mixte,Tanger,operationnel
+8,17,depot,Tanger,operationnel
+9,10,distributeur,Meknes,hors service
+10,10,distributeur,Meknes,en panne
+11,14,depot,Tetouan,operationnel
+12,16,mixte,Meknes,operationnel
+13,17,depot,Tanger,hors service
+14,15,distributeur,Oujda,operationnel
+15,16,mixte,Meknes,operationnel
+16,4,distributeur,Meknes,operationnel
+17,4,depot,Meknes,en panne
+18,11,mixte,Marrakech,operationnel
+19,11,depot,Marrakech,operationnel
+20,6,mixte,Kenitra,operationnel
+21,4,distributeur,Meknes,operationnel
+22,5,mixte,Rabat,operationnel
+23,11,depot,Marrakech,operationnel
+24,5,distributeur,Rabat,operationnel
+25,9,depot,Tanger,operationnel
+26,8,mixte,Fes,hors service
+27,19,distributeur,Fes,operationnel
+28,16,mixte,Meknes,hors service
+29,17,depot,Tanger,operationnel
+30,18,distributeur,Fes,operationnel
+31,14,distributeur,Tetouan,operationnel
+32,9,mixte,Tanger,operationnel
+33,9,depot,Tanger,operationnel
+34,19,distributeur,Fes,operationnel
+35,12,distributeur,Rabat,operationnel
+36,10,mixte,Meknes,operationnel
+37,9,distributeur,Tanger,operationnel
+38,15,distributeur,Oujda,hors service
+39,11,mixte,Marrakech,operationnel
+40,4,depot,Meknes,operationnel
+41,5,depot,Rabat,en panne
+42,16,distributeur,Meknes,operationnel
+43,5,depot,Rabat,operationnel
+44,11,distributeur,Marrakech,operationnel
+45,12,depot,Rabat,operationnel
+46,20,distributeur,Fes,operationnel
+47,17,depot,Tanger,operationnel
+48,18,depot,Fes,operationnel
+49,8,distributeur,Fes,operationnel
+50,14,mixte,Tetouan,hors service
+51,15,mixte,Oujda,operationnel
+52,8,depot,Fes,en panne
+53,5,mixte,Rabat,operationnel
+54,10,depot,Meknes,operationnel
+55,10,mixte,Meknes,operationnel
+56,18,distributeur,Fes,operationnel
+57,10,mixte,Meknes,operationnel
+58,4,distributeur,Meknes,operationnel
+59,19,distributeur,Fes,operationnel
+60,11,distributeur,Marrakech,operationnel
+61,18,distributeur,Fes,operationnel
+62,12,mixte,Rabat,operationnel
+63,12,depot,Rabat,operationnel
+64,8,mixte,Fes,operationnel
+65,13,depot,Rabat,operationnel
+66,15,mixte,Oujda,operationnel
+67,4,distributeur,Meknes,operationnel
+68,6,distributeur,Kenitra,operationnel
+69,9,distributeur,Tanger,operationnel
+70,7,distributeur,Fes,operationnel
+71,12,depot,Rabat,operationnel
+72,16,mixte,Meknes,operationnel
+73,17,mixte,Tanger,en panne
+74,16,depot,Meknes,operationnel
+75,17,distributeur,Tanger,operationnel
+76,16,mixte,Meknes,en panne
+77,19,distributeur,Fes,operationnel
+78,13,mixte,Rabat,operationnel
+79,16,mixte,Meknes,operationnel
+80,8,distributeur,Fes,operationnel
+81,20,depot,Fes,operationnel
+82,4,distributeur,Meknes,operationnel
+83,10,distributeur,Meknes,en panne
+84,13,distributeur,Rabat,operationnel
+85,15,mixte,Oujda,operationnel
+86,11,distributeur,Marrakech,operationnel
+87,16,distributeur,Meknes,operationnel
+88,20,depot,Fes,hors service
+89,14,depot,Tetouan,operationnel
+90,6,distributeur,Kenitra,operationnel
+91,10,mixte,Meknes,operationnel
+92,6,mixte,Kenitra,en panne
+93,10,distributeur,Meknes,operationnel
+94,7,depot,Fes,operationnel
+95,10,distributeur,Meknes,operationnel
+96,11,mixte,Marrakech,operationnel
+97,17,distributeur,Tanger,en panne
+98,14,distributeur,Tetouan,operationnel
+99,13,mixte,Rabat,operationnel
+100,9,depot,Tanger,operationnel

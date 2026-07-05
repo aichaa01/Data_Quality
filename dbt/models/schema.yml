@@ -1,0 +1,138 @@
+version: 2
+
+# ─────────────────────────────────────────────
+# SOURCES (tables brutes PostgreSQL — la BDR)
+# ─────────────────────────────────────────────
+sources:
+  - name: raw
+    schema: public
+    tables:
+      - name: agences
+      - name: clients
+      - name: comptes
+      - name: cartes
+      - name: gabs
+      - name: transactions
+      - name: digital_usage
+      - name: admin_decisions
+
+# ─────────────────────────────────────────────
+# STAGING MODELS — Tests génériques
+# ─────────────────────────────────────────────
+models:
+  - name: stg_agences
+    description: "Agences Al Barid Bank — nettoyees"
+    columns:
+      - name: agence_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_clients
+    description: "Clients — nettoyes avec flags qualite"
+    columns:
+      - name: client_id
+        tests:
+          - not_null
+          - unique
+      - name: cin
+        tests:
+          - not_null
+          - unique
+      - name: agence_id
+        tests:
+          - not_null
+
+  - name: stg_comptes
+    description: "Comptes bancaires — nettoyes"
+    columns:
+      - name: compte_id
+        tests:
+          - not_null
+          - unique
+      - name: statut
+        tests:
+          - accepted_values:
+              values: ['actif', 'cloture', 'suspendu']
+
+  - name: stg_cartes
+    description: "Cartes bancaires — nettoyees"
+    columns:
+      - name: carte_id
+        tests:
+          - not_null
+          - unique
+      - name: statut
+        tests:
+          - accepted_values:
+              values: ['active', 'expiree', 'bloquee']
+
+  - name: stg_gabs
+    description: "GABs — nettoyes"
+    columns:
+      - name: gab_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_transactions
+    description: "Transactions — nettoyees avec flags coherence canal/GAB"
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+          - unique
+      - name: canal
+        tests:
+          - accepted_values:
+              values: ['agence', 'GAB', 'BBM', 'BaridNet']
+      - name: montant
+        tests:
+          - not_null
+
+  - name: stg_digital_usage
+    description: "Digital usage — nettoye"
+    columns:
+      - name: usage_id
+        tests:
+          - not_null
+          - unique
+      - name: canal
+        tests:
+          - accepted_values:
+              values: ['BBM', 'BaridNet']
+
+# ─────────────────────────────────────────────
+# MARTS MODELS
+# ─────────────────────────────────────────────
+  - name: dim_clients
+    description: "Dimension clients enrichie avec score qualite"
+    columns:
+      - name: client_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_comptes
+    description: "Dimension comptes avec flag client inexistant"
+    columns:
+      - name: compte_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_agences
+    description: "Dimension agences avec duree d'activite"
+    columns:
+      - name: agence_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_transactions
+    description: "Table de faits transactions enrichie avec scores qualite"
+    columns:
+      - name: transaction_id
+        tests:
+          - not_null
+          - unique

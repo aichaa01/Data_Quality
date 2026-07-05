@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Al Barid Bank DQ</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --brown:       #6B4C3B;
+  --brown-dark:  #4A3328;
+  --brown-mid:   #7D5A4A;
+  --yellow:      #E8A020;
+  --yellow-light:#FFF3DC;
+  --yellow-dark: #C8881A;
+  --bg:          #F7F5F3;
+  --card:        #FFFFFF;
+  --text:        #2C1F18;
+  --muted:       #8B7B72;
+  --border:      #E8E0DA;
+  --success:     #15803D;
+  --danger:      #B91C1C;
+  --danger-light:#FEE2E2;
+  --sidebar-w:   240px;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ── Sidebar ─────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--brown-dark);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  height: 100vh;
+  z-index: 200;
+}
+
+.sidebar-logo {
+  padding: 20px 18px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-logo img {
+  width: 145px;
+  display: block;
+  filter: brightness(0) invert(1);
+}
+
+.sidebar-logo-text {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: none;
+}
+
+.sidebar-subtitle {
+  font-size: 9px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-top: 7px;
+}
+
+.sidebar nav { padding: 10px 0; flex: 1; overflow-y: auto; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 18px;
+  color: rgba(255,255,255,0.65);
+  text-decoration: none;
+  font-size: 13px;
+  border-left: 3px solid transparent;
+  transition: all 0.18s;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+  border-left-color: var(--yellow);
+}
+
+.nav-item.active {
+  background: rgba(232,160,32,0.13);
+  color: var(--yellow);
+  border-left-color: var(--yellow);
+  font-weight: 600;
+}
+
+.nav-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  flex-shrink: 0;
+}
+
+.nav-item.active .nav-dot { background: var(--yellow); }
+
+.sidebar-footer {
+  padding: 14px 18px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  line-height: 1.6;
+}
+
+/* ── Main ──────────────────────────────────── */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.topbar-title { font-size: 16px; font-weight: 700; color: var(--brown-dark); }
+.topbar-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.content { padding: 24px 28px; }
+
+/* ── Cards ──────────────────────────────────── */
+.card {
+  background: var(--card);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.card-header {
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.card-title { font-size: 13px; font-weight: 700; color: var(--brown-dark); }
+
+/* ── Tables ─────────────────────────────────── */
+.table-wrap { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+th {
+  background: var(--bg);
+  padding: 9px 16px;
+  text-align: left;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--muted);
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #FDFAF8; }
+
+/* ── Buttons ────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  transition: all 0.16s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn:hover     { background: var(--bg); }
+.btn:disabled  { opacity: 0.4; cursor: not-allowed; }
+
+.btn-primary   { background: var(--brown-dark); color: #fff; border-color: var(--brown-dark); }
+.btn-primary:hover { background: var(--brown-mid); }
+
+.btn-yellow    { background: var(--yellow); color: var(--brown-dark); border-color: var(--yellow); }
+.btn-yellow:hover { background: var(--yellow-dark); }
+
+.btn-success   { background: var(--success); color: #fff; border-color: var(--success); }
+.btn-success:hover { background: #166534; }
+
+.btn-danger    { background: var(--danger-light); color: var(--danger); border-color: #FECACA; }
+.btn-danger:hover { background: #FEE2E2; }
+
+/* ── Badges ─────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-coherence  { background: #FEE2E2; color: #991B1B; }
+.badge-unicite    { background: #FEF3C7; color: #92400E; }
+.badge-exactitude { background: #DBEAFE; color: #1E40AF; }
+.badge-fraicheur  { background: #EDE9FE; color: #5B21B6; }
+.badge-completude { background: #D1FAE5; color: #065F46; }
+.badge-accepted   { background: #D1FAE5; color: #065F46; }
+.badge-rejected   { background: #FEE2E2; color: #991B1B; }
+
+/* ── Progress ───────────────────────────────── */
+.progress { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; width: 80px; }
+.progress-fill { height: 100%; border-radius: 3px; }
+
+/* ── Pagination ─────────────────────────────── */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  justify-content: flex-end;
+}
+.pag-info { font-size: 12px; color: var(--muted); margin-right: auto; }
+
+/* ── Spinner ────────────────────────────────── */
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--brown);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: var(--muted); gap: 10px; }
+
+/* ── Modal ──────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(2px);
+}
+
+.modal {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 26px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: modal-in 0.2s ease;
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.96) translateY(-6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-header h3 { font-size: 15px; font-weight: 700; color: var(--brown-dark); }
+.modal-body { display: flex; flex-direction: column; gap: 13px; margin-bottom: 18px; }
+
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+.form-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
+}
+
+.record-info {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: monospace;
+}
+
+select, textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  background: var(--card);
+  color: var(--text);
+  font-family: inherit;
+}
+
+textarea { resize: vertical; min-height: 70px; }
+
+/* ── NULL ───────────────────────────────────── */
+.null-val { color: var(--danger); font-size: 11px; font-weight: 700; }
+
+/* ── Empty ──────────────────────────────────── */
+.empty { text-align: center; padding: 36px; color: var(--muted); font-size: 13px; }
+
+/* ── KPI Grid ── */
+.kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+
+.kpi-card {
+  background: var(--card);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  padding: 20px 22px;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card.c1 { border-left-color: var(--brown-mid); }
+.kpi-card.c2 { border-left-color: var(--yellow); }
+.kpi-card.c3 { border-left-color: #E05C2A; }
+
+.kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 10px; }
+.kpi-value { font-size: 30px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+.kpi-card.c1 .kpi-value { color: var(--brown); }
+.kpi-card.c2 .kpi-value { color: var(--yellow-dark); }
+.kpi-card.c3 .kpi-value { color: #E05C2A; }
+.kpi-sub { font-size: 12px; color: var(--muted); }
+
+.kpi-traites {
+  display: inline-block;
+  background: var(--yellow-light);
+  color: var(--brown);
+  padding: 2px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.chart-wrap { display: flex; align-items: center; gap: 20px; padding: 16px 20px; }
+.chart-canvas-wrap { width: 170px; height: 170px; flex-shrink: 0; }
+.chart-legend { flex: 1; }
+
+.legend-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px;
+}
+.legend-item:last-child { border-bottom: none; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.legend-name { flex: 1; }
+.legend-count { font-weight: 700; color: var(--brown-dark); }
+.legend-pct { font-size: 11px; color: var(--muted); margin-left: 4px; }
+
+.alert-pending {
+  background: #FFF7ED;
+  border: 1px solid #FED7AA;
+  border-left: 4px solid #E05C2A;
+  border-radius: 8px;
+  padding: 11px 16px;
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: #7C2D12;
+}
+
+.rules-table td code { font-size: 11px; color: var(--brown-dark); background: var(--bg); padding: 1px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="/static/logo_ABB.png" alt="Al Barid Bank"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <div class="sidebar-logo-text">AL BARID BANK</div>
+    <div class="sidebar-subtitle">Data Quality Platform</div>
+  </div>
+  <nav>
+    <a href="/" class="nav-item active"><span class="nav-dot"></span> Dashboard</a>
+    <a href="/anomalies" class="nav-item"><span class="nav-dot"></span> Anomalies</a>
+    <a href="/decisions" class="nav-item"><span class="nav-dot"></span> Decisions Admin</a>
+    
+  </nav>
+  <div class="sidebar-footer">Al Barid Bank &copy; 2025<br>Division Data &amp; BI</div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Tableau de bord — Qualite des donnees</div>
+      <div class="topbar-sub" id="current-date"></div>
+    </div>
+    <button class="btn btn-yellow" onclick="loadAll()">Actualiser</button>
+  </div>
+
+  <div class="content">
+
+    <div class="alert-pending" id="alert-pending" style="display:none;">
+      <span id="alert-text"></span>
+      <a href="/anomalies" style="margin-left:auto;color:#7C2D12;font-weight:700;font-size:12px;text-decoration:none;">Traiter maintenant</a>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card c1">
+        <div class="kpi-label">Donnees recues (total)</div>
+        <div class="kpi-value" id="kpi-received"><div class="spinner"></div></div>
+        <div class="kpi-sub">Enregistrements charges dans la base</div>
+      </div>
+      <div class="kpi-card c2">
+        <div class="kpi-label">Anomalies detectees (total)</div>
+        <div class="kpi-value" id="kpi-detected"><div class="spinner"></div></div>
+        <div class="kpi-sub" id="kpi-sub-detected"></div>
+      </div>
+      <div class="kpi-card c3">
+        <div class="kpi-label">En attente de decision</div>
+        <div class="kpi-value" id="kpi-pending"><div class="spinner"></div></div>
+        <div class="kpi-sub">Necessitent une action administrative</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Anomalies en attente par dimension</span>
+        </div>
+        <div id="donut-container">
+          <div class="loading"><div class="spinner"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Regles avec anomalies en attente</span>
+        </div>
+        <div class="table-wrap">
+          <table class="rules-table">
+            <thead>
+              <tr>
+                <th>Regle</th>
+                <th>Dimension</th>
+                <th>En attente</th>
+                <th>Traites</th>
+              </tr>
+            </thead>
+            <tbody id="rules-body">
+              <tr><td colspan="4"><div class="loading"><div class="spinner"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const DIM_COLORS = {
+  coherence:  '#C8102E',
+  unicite:    '#E8A020',
+  exactitude: '#3B82F6',
+  fraicheur:  '#8B5CF6',
+  completude: '#10B981',
+};
+const DIM_LABELS = {
+  coherence: 'Coherence', unicite: 'Unicite',
+  exactitude: 'Exactitude', fraicheur: 'Fraicheur', completude: 'Completude'
+};
+
+document.getElementById('current-date').textContent =
+  new Date().toLocaleDateString('fr-MA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+async function api(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+function fmt(n) { return (n||0).toLocaleString('fr-FR'); }
+
+async function loadKPIs() {
+  try {
+    const d = await api('/api/dashboard/kpis');
+    document.getElementById('kpi-received').textContent = fmt(d.total_enregistrements);
+    document.getElementById('kpi-detected').textContent = fmt(d.total_anomalies);
+    document.getElementById('kpi-pending').textContent  = fmt(d.en_attente);
+    document.getElementById('kpi-sub-detected').innerHTML =
+      '<span class="kpi-traites">' + fmt(d.traites) + ' traitees</span> sur ' + fmt(d.total_anomalies);
+    const alert = document.getElementById('alert-pending');
+    if (d.en_attente > 0) {
+      document.getElementById('alert-text').textContent =
+        fmt(d.en_attente) + ' anomalie(s) en attente de decision administrative.';
+      alert.style.display = 'flex';
+    } else {
+      alert.style.display = 'none';
+    }
+  } catch(e) {
+    ['kpi-received','kpi-detected','kpi-pending'].forEach(id => {
+      document.getElementById(id).textContent = 'Erreur';
+    });
+  }
+}
+
+let donutChart = null;
+async function loadDonut() {
+  const container = document.getElementById('donut-container');
+  try {
+    const data = await api('/api/dashboard/anomalies-par-dimension');
+    if (!data.length) {
+      container.innerHTML = '<div class="empty">Aucune anomalie en attente</div>';
+      return;
+    }
+    const total = data.reduce((s,d) => s + d.count, 0);
+    container.innerHTML =
+      '<div class="chart-wrap">' +
+      '<div class="chart-canvas-wrap"><canvas id="donut-canvas"></canvas></div>' +
+      '<div class="chart-legend" id="donut-legend"></div>' +
+      '</div>';
+
+    if (donutChart) donutChart.destroy();
+    donutChart = new Chart(document.getElementById('donut-canvas'), {
+      type: 'doughnut',
+      data: {
+        labels: data.map(d => DIM_LABELS[d.dimension] || d.dimension),
+        datasets: [{
+          data: data.map(d => d.count),
+          backgroundColor: data.map(d => DIM_COLORS[d.dimension] || '#94A3B8'),
+          borderWidth: 2, borderColor: '#fff', hoverBorderWidth: 3,
+        }]
+      },
+      options: {
+        cutout: '68%', responsive: true, maintainAspectRatio: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ' : ' + fmt(ctx.raw) + ' (' + Math.round(ctx.raw/total*100) + '%)' } }
+        }
+      }
+    });
+
+    document.getElementById('donut-legend').innerHTML = data.map(d =>
+      '<div class="legend-item">' +
+      '<div class="legend-dot" style="background:' + (DIM_COLORS[d.dimension]||'#94A3B8') + '"></div>' +
+      '<span class="legend-name">' + (DIM_LABELS[d.dimension]||d.dimension) + '</span>' +
+      '<span class="legend-count">' + fmt(d.count) + '</span>' +
+      '<span class="legend-pct">' + Math.round(d.count/total*100) + '%</span>' +
+      '</div>'
+    ).join('');
+  } catch(e) {
+    container.innerHTML = '<div class="empty">Erreur de chargement</div>';
+  }
+}
+
+async function loadRules() {
+  const tbody = document.getElementById('rules-body');
+  try {
+    const data = await api('/api/dashboard/anomalies-par-regle');
+    if (!data.length) {
+      tbody.innerHTML = '<tr><td colspan="4"><div class="empty">Toutes les anomalies ont ete traitees</div></td></tr>';
+      return;
+    }
+    const max = Math.max(...data.map(d => d.en_attente));
+    tbody.innerHTML = data.map(d =>
+      '<tr>' +
+      '<td><code>' + d.rule_id + '</code></td>' +
+      '<td><span class="badge badge-' + d.dimension + '">' + (DIM_LABELS[d.dimension]||d.dimension) + '</span></td>' +
+      '<td><div style="display:flex;align-items:center;gap:8px;">' +
+      '<strong style="color:#E05C2A;">' + fmt(d.en_attente) + '</strong>' +
+      '<div class="progress"><div class="progress-fill" style="width:' + Math.round(d.en_attente/max*100) + '%;background:' + (DIM_COLORS[d.dimension]||'#E8A020') + ';"></div></div>' +
+      '</div></td>' +
+      '<td style="color:var(--muted);">' + fmt(d.traites) + '</td>' +
+      '</tr>'
+    ).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted);padding:20px;">Erreur de chargement</td></tr>';
+  }
+}
+
+async function loadAll() {
+  await Promise.all([loadKPIs(), loadDonut(), loadRules()]);
+}
+
+loadAll();
+</script>
+</body>
+</html>

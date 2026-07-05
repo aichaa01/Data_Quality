@@ -1,0 +1,744 @@
+{
+  "generated_at": "2026-06-30T12:10:10.340146",
+  "generic_profiling": {
+    "agences": {
+      "total_rows": 20,
+      "columns": {
+        "agence_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 20
+        },
+        "nom_agence": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 20
+        },
+        "ville": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 8
+        },
+        "region": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 5
+        },
+        "date_ouverture": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 20,
+          "min_date": "2000-03-21 00:00:00",
+          "max_date": "2018-07-22 00:00:00",
+          "stale_count": 20,
+          "stale_pct": 100.0
+        },
+        "type_agence": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3
+        },
+        "statut": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 2
+        },
+        "date_fermeture": {
+          "null_count": 17,
+          "completeness_pct": 15.0,
+          "distinct_count": 3,
+          "min_date": "2019-05-16 00:00:00",
+          "max_date": "2022-02-25 00:00:00",
+          "stale_count": 2,
+          "stale_pct": 10.0
+        }
+      },
+      "duplicates": {
+        "agence_id": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        }
+      }
+    },
+    "clients": {
+      "total_rows": 5000,
+      "columns": {
+        "client_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 5000
+        },
+        "cin": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 5000
+        },
+        "nom": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 400
+        },
+        "prenom": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 215
+        },
+        "date_naissance": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 4347,
+          "min_date": "1955-01-05 00:00:00",
+          "max_date": "2000-12-27 00:00:00",
+          "stale_count": 5000,
+          "stale_pct": 100.0
+        },
+        "telephone": {
+          "null_count": 291,
+          "completeness_pct": 94.18,
+          "distinct_count": 4709
+        },
+        "email": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 4966
+        },
+        "adresse": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 5000
+        },
+        "agence_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 18
+        },
+        "date_creation": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 2548,
+          "min_date": "2015-01-01 00:00:00",
+          "max_date": "2023-12-27 00:00:00",
+          "stale_count": 3622,
+          "stale_pct": 72.44
+        }
+      },
+      "duplicates": {
+        "client_id": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        },
+        "cin": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        }
+      }
+    },
+    "comptes": {
+      "total_rows": 7000,
+      "columns": {
+        "compte_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 7000
+        },
+        "client_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3767
+        },
+        "type_compte": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3
+        },
+        "date_ouverture": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 2907,
+          "min_date": "2015-01-01 00:00:00",
+          "max_date": "2023-12-30 00:00:00",
+          "stale_count": 5008,
+          "stale_pct": 71.54
+        },
+        "solde": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 7000,
+          "min": 171.65,
+          "max": 499965.09,
+          "mean": 249096.6,
+          "median": 249660.57,
+          "std": 143889.47
+        },
+        "statut": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3
+        }
+      },
+      "duplicates": {
+        "compte_id": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        }
+      }
+    },
+    "cartes": {
+      "total_rows": 6500,
+      "columns": {
+        "carte_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 6500
+        },
+        "compte_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3692
+        },
+        "type_carte": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3
+        },
+        "date_expiration": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 1782,
+          "min_date": "2024-01-01 00:00:00",
+          "max_date": "2028-12-30 00:00:00",
+          "stale_count": 0,
+          "stale_pct": 0.0
+        },
+        "statut": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3
+        }
+      },
+      "duplicates": {
+        "carte_id": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        }
+      }
+    },
+    "gabs": {
+      "total_rows": 100,
+      "columns": {
+        "gab_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 100
+        },
+        "agence_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 17
+        },
+        "type_gab": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3
+        },
+        "ville": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 8
+        },
+        "statut": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 3
+        }
+      },
+      "duplicates": {
+        "gab_id": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        }
+      }
+    },
+    "transactions": {
+      "total_rows": 100000,
+      "columns": {
+        "transaction_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 100000
+        },
+        "compte_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 7001
+        },
+        "date_transaction": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 99963,
+          "min_date": "2020-01-01 00:06:13",
+          "max_date": "2024-12-30 23:51:19",
+          "stale_count": 29971,
+          "stale_pct": 29.97
+        },
+        "montant": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 99005,
+          "min": 11.1,
+          "max": 49999.89,
+          "mean": 25015.35,
+          "median": 25028.35,
+          "std": 14389.72
+        },
+        "type_transaction": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 4
+        },
+        "canal": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 4
+        },
+        "agence_id": {
+          "null_count": 74863,
+          "completeness_pct": 25.14,
+          "distinct_count": 17
+        },
+        "gab_id": {
+          "null_count": 74079,
+          "completeness_pct": 25.92,
+          "distinct_count": 100
+        }
+      },
+      "duplicates": {
+        "transaction_id": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        }
+      }
+    },
+    "digital_usage": {
+      "total_rows": 50000,
+      "columns": {
+        "usage_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 50000
+        },
+        "client_id": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 5001
+        },
+        "date_connexion": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 49995,
+          "min_date": "2020-01-01 00:09:52",
+          "max_date": "2024-12-30 22:33:09",
+          "stale_count": 14998,
+          "stale_pct": 30.0
+        },
+        "canal": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 2
+        },
+        "action": {
+          "null_count": 0,
+          "completeness_pct": 100.0,
+          "distinct_count": 4
+        }
+      },
+      "duplicates": {
+        "usage_id": {
+          "duplicate_count": 0,
+          "duplicate_pct": 0.0
+        }
+      }
+    }
+  },
+  "business_rules": {
+    "TX_GAB_SANS_ID": {
+      "description": "Transaction canal=GAB mais gab_id est NULL",
+      "dimension": "coherence",
+      "tables": [
+        "transactions"
+      ],
+      "anomaly_count": 498,
+      "total_ref": 100000,
+      "anomaly_pct": 0.5,
+      "sample": [
+        {
+          "transaction_id": 150,
+          "compte_id": 3708,
+          "date_transaction": "2022-07-13 16:59:10",
+          "canal": "GAB",
+          "gab_id": null
+        },
+        {
+          "transaction_id": 491,
+          "compte_id": 942,
+          "date_transaction": "2023-03-06 13:02:08",
+          "canal": "GAB",
+          "gab_id": null
+        },
+        {
+          "transaction_id": 616,
+          "compte_id": 3107,
+          "date_transaction": "2021-12-07 05:50:07",
+          "canal": "GAB",
+          "gab_id": null
+        },
+        {
+          "transaction_id": 1054,
+          "compte_id": 5682,
+          "date_transaction": "2022-07-10 03:01:41",
+          "canal": "GAB",
+          "gab_id": null
+        },
+        {
+          "transaction_id": 1208,
+          "compte_id": 2793,
+          "date_transaction": "2022-12-08 12:17:30",
+          "canal": "GAB",
+          "gab_id": null
+        }
+      ],
+      "status": "anomalies detectees"
+    },
+    "TX_NON_GAB_AVEC_ID": {
+      "description": "Transaction canal!=GAB mais gab_id est renseigne",
+      "dimension": "coherence",
+      "tables": [
+        "transactions"
+      ],
+      "anomaly_count": 1502,
+      "total_ref": 100000,
+      "anomaly_pct": 1.5,
+      "sample": [
+        {
+          "transaction_id": 48,
+          "compte_id": 5326,
+          "date_transaction": "2020-08-08 21:57:58",
+          "canal": "BBM",
+          "gab_id": 76
+        },
+        {
+          "transaction_id": 220,
+          "compte_id": 5428,
+          "date_transaction": "2024-06-26 07:36:00",
+          "canal": "BaridNet",
+          "gab_id": 76
+        },
+        {
+          "transaction_id": 227,
+          "compte_id": 117,
+          "date_transaction": "2020-12-03 10:04:42",
+          "canal": "BBM",
+          "gab_id": 76
+        },
+        {
+          "transaction_id": 237,
+          "compte_id": 6613,
+          "date_transaction": "2024-09-30 22:23:53",
+          "canal": "agence",
+          "gab_id": 76
+        },
+        {
+          "transaction_id": 321,
+          "compte_id": 538,
+          "date_transaction": "2022-11-12 05:06:44",
+          "canal": "BaridNet",
+          "gab_id": 76
+        }
+      ],
+      "status": "anomalies detectees"
+    },
+    "CARTE_ACTIVE_COMPTE_CLOTURE": {
+      "description": "Carte active liee a un compte cloture",
+      "dimension": "coherence",
+      "tables": [
+        "cartes",
+        "comptes"
+      ],
+      "anomaly_count": 137,
+      "total_ref": 6500,
+      "anomaly_pct": 2.11,
+      "sample": [
+        {
+          "carte_id": 191,
+          "compte_id": 1753,
+          "statut_carte": "active",
+          "statut_compte": "cloture"
+        },
+        {
+          "carte_id": 314,
+          "compte_id": 1753,
+          "statut_carte": "active",
+          "statut_compte": "cloture"
+        },
+        {
+          "carte_id": 316,
+          "compte_id": 1753,
+          "statut_carte": "active",
+          "statut_compte": "cloture"
+        },
+        {
+          "carte_id": 371,
+          "compte_id": 1753,
+          "statut_carte": "active",
+          "statut_compte": "cloture"
+        },
+        {
+          "carte_id": 430,
+          "compte_id": 1753,
+          "statut_carte": "active",
+          "statut_compte": "cloture"
+        }
+      ],
+      "status": "anomalies detectees"
+    },
+    "TX_COMPTE_INEXISTANT": {
+      "description": "Transaction avec compte_id inexistant dans la table comptes",
+      "dimension": "coherence",
+      "tables": [
+        "transactions",
+        "comptes"
+      ],
+      "anomaly_count": 3000,
+      "total_ref": 100000,
+      "anomaly_pct": 3.0,
+      "sample": [
+        {
+          "transaction_id": 45,
+          "compte_id": 91629,
+          "date_transaction": "2022-09-11 15:39:48",
+          "montant": 15101.52
+        },
+        {
+          "transaction_id": 116,
+          "compte_id": 91629,
+          "date_transaction": "2024-05-16 07:55:13",
+          "montant": 27550.67
+        },
+        {
+          "transaction_id": 128,
+          "compte_id": 91629,
+          "date_transaction": "2021-12-20 00:10:56",
+          "montant": 19366.31
+        },
+        {
+          "transaction_id": 140,
+          "compte_id": 91629,
+          "date_transaction": "2022-09-19 06:16:16",
+          "montant": 23547.48
+        },
+        {
+          "transaction_id": 187,
+          "compte_id": 91629,
+          "date_transaction": "2023-08-27 03:57:54",
+          "montant": 49147.25
+        }
+      ],
+      "status": "anomalies detectees"
+    },
+    "CLIENT_AGENCE_FERMEE": {
+      "description": "Client rattache a une agence fermee",
+      "dimension": "coherence",
+      "tables": [
+        "clients",
+        "agences"
+      ],
+      "anomaly_count": 100,
+      "total_ref": 5000,
+      "anomaly_pct": 2.0,
+      "sample": [
+        {
+          "client_id": 36,
+          "nom": "Laroche",
+          "prenom": "Renée",
+          "agence_id": 1,
+          "nom_agence": "Agence Rabat 01",
+          "statut": "fermee",
+          "date_fermeture": "2022-02-25"
+        },
+        {
+          "client_id": 50,
+          "nom": "Gonzalez",
+          "prenom": "Agnès",
+          "agence_id": 1,
+          "nom_agence": "Agence Rabat 01",
+          "statut": "fermee",
+          "date_fermeture": "2022-02-25"
+        },
+        {
+          "client_id": 81,
+          "nom": "Blanchard",
+          "prenom": "Benjamin",
+          "agence_id": 1,
+          "nom_agence": "Agence Rabat 01",
+          "statut": "fermee",
+          "date_fermeture": "2022-02-25"
+        },
+        {
+          "client_id": 108,
+          "nom": "Pinto",
+          "prenom": "Olivie",
+          "agence_id": 1,
+          "nom_agence": "Agence Rabat 01",
+          "statut": "fermee",
+          "date_fermeture": "2022-02-25"
+        },
+        {
+          "client_id": 124,
+          "nom": "Rivière",
+          "prenom": "Michel",
+          "agence_id": 1,
+          "nom_agence": "Agence Rabat 01",
+          "statut": "fermee",
+          "date_fermeture": "2022-02-25"
+        }
+      ],
+      "status": "anomalies detectees"
+    },
+    "COMPTE_CLIENT_INEXISTANT": {
+      "description": "Compte avec client_id qui n'existe pas dans clients",
+      "dimension": "coherence",
+      "tables": [
+        "comptes",
+        "clients"
+      ],
+      "anomaly_count": 210,
+      "total_ref": 7000,
+      "anomaly_pct": 3.0,
+      "sample": [
+        {
+          "compte_id": 2,
+          "client_id": 96976,
+          "type_compte": "professionnel",
+          "statut": "actif"
+        },
+        {
+          "compte_id": 20,
+          "client_id": 96976,
+          "type_compte": "professionnel",
+          "statut": "actif"
+        },
+        {
+          "compte_id": 60,
+          "client_id": 96976,
+          "type_compte": "courant",
+          "statut": "actif"
+        },
+        {
+          "compte_id": 76,
+          "client_id": 96976,
+          "type_compte": "courant",
+          "statut": "actif"
+        },
+        {
+          "compte_id": 94,
+          "client_id": 96976,
+          "type_compte": "epargne",
+          "statut": "actif"
+        }
+      ],
+      "status": "anomalies detectees"
+    },
+    "DIGITAL_CLIENT_INEXISTANT": {
+      "description": "Usage digital avec client_id inexistant dans clients",
+      "dimension": "coherence",
+      "tables": [
+        "digital_usage",
+        "clients"
+      ],
+      "anomaly_count": 1000,
+      "total_ref": 50000,
+      "anomaly_pct": 2.0,
+      "sample": [
+        {
+          "usage_id": 3,
+          "client_id": 91067,
+          "date_connexion": "2023-04-09 11:23:11",
+          "canal": "BBM"
+        },
+        {
+          "usage_id": 165,
+          "client_id": 91067,
+          "date_connexion": "2023-06-07 09:47:40",
+          "canal": "BaridNet"
+        },
+        {
+          "usage_id": 273,
+          "client_id": 91067,
+          "date_connexion": "2022-02-06 12:30:17",
+          "canal": "BBM"
+        },
+        {
+          "usage_id": 305,
+          "client_id": 91067,
+          "date_connexion": "2022-09-03 21:30:38",
+          "canal": "BBM"
+        },
+        {
+          "usage_id": 319,
+          "client_id": 91067,
+          "date_connexion": "2023-02-24 11:22:13",
+          "canal": "BaridNet"
+        }
+      ],
+      "status": "anomalies detectees"
+    },
+    "CONTACT_INVALIDE": {
+      "description": "Client sans aucun moyen de contact valide (email invalide ET telephone NULL)",
+      "dimension": "exactitude",
+      "tables": [
+        "clients"
+      ],
+      "anomaly_count": 150,
+      "total_ref": 5000,
+      "anomaly_pct": 3.0,
+      "sample": [
+        {
+          "client_id": 24,
+          "nom": "Langlois",
+          "prenom": "Josette",
+          "email": "mauricezoeexamplenet",
+          "telephone": null
+        },
+        {
+          "client_id": 30,
+          "nom": "Normand",
+          "prenom": "Colette",
+          "email": "gabrielle18exampleorg",
+          "telephone": null
+        },
+        {
+          "client_id": 66,
+          "nom": "Didier",
+          "prenom": "Susanne",
+          "email": "bernardblinexamplenet",
+          "telephone": null
+        },
+        {
+          "client_id": 80,
+          "nom": "Maurice",
+          "prenom": "Anouk",
+          "email": "adelaide11examplecom",
+          "telephone": null
+        },
+        {
+          "client_id": 85,
+          "nom": "Lelièvre",
+          "prenom": "Margaud",
+          "email": "agathe63examplenet",
+          "telephone": null
+        }
+      ],
+      "status": "anomalies detectees"
+    }
+  }
+}

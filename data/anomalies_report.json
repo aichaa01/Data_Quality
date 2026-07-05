@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-06-30T11:56:59.296402",
+  "datasets": {
+    "agences": {
+      "total": 20,
+      "anomalies": {
+        "agences_fermees": 3
+      }
+    },
+    "clients": {
+      "total": 5000,
+      "anomalies": {
+        "contact_invalide": 150,
+        "email_invalide_seul_accepte": 146,
+        "telephone_null_seul_accepte": 141,
+        "agence_fermee": 100
+      }
+    },
+    "comptes": {
+      "total": 7000,
+      "anomalies": {
+        "client_inexistant": 210
+      }
+    },
+    "cartes": {
+      "total": 6500,
+      "anomalies": {
+        "carte_active_compte_cloture": 137
+      }
+    },
+    "gabs": {
+      "total": 100,
+      "anomalies": {}
+    },
+    "transactions": {
+      "total": 100000,
+      "anomalies": {
+        "compte_inexistant": 3000,
+        "gab_sans_id": 498,
+        "non_gab_avec_id": 1502
+      }
+    },
+    "digital_usage": {
+      "total": 50000,
+      "anomalies": {
+        "client_inexistant": 1000
+      }
+    }
+  }
+}

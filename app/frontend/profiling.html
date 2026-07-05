@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Profiling — Al Barid Bank DQ</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brown:#6B4C3B; --brown-dark:#4A3328; --brown-mid:#7D5A4A;
+      --yellow:#E8A020; --yellow-light:#FFF3DC;
+      --bg:#F7F5F3; --card:#FFFFFF; --text:#2C1F18; --muted:#8B7B72; --border:#E8E0DA;
+      --success:#15803D; --danger:#B91C1C; --sidebar-w:240px;
+    }
+    body { font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; font-size:14px; }
+    .sidebar { width:var(--sidebar-w); background:var(--brown-dark); display:flex; flex-direction:column; position:fixed; top:0; left:0; height:100vh; z-index:200; }
+    .sidebar-logo { padding:20px 18px 14px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .sidebar-logo img { width:145px; display:block; filter:brightness(0) invert(1); }
+    .sidebar-logo-text { color:#fff; font-size:15px; font-weight:800; display:none; }
+    .sidebar-subtitle { font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1.2px; margin-top:7px; }
+    .sidebar nav { padding:10px 0; flex:1; }
+    .nav-item { display:flex; align-items:center; gap:10px; padding:11px 18px; color:rgba(255,255,255,0.65); text-decoration:none; font-size:13px; border-left:3px solid transparent; transition:all 0.18s; }
+    .nav-item:hover { background:rgba(255,255,255,0.07); color:#fff; border-left-color:var(--yellow); }
+    .nav-item.active { background:rgba(232,160,32,0.13); color:var(--yellow); border-left-color:var(--yellow); font-weight:600; }
+    .nav-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.3); flex-shrink:0; }
+    .nav-item.active .nav-dot { background:var(--yellow); }
+    .sidebar-footer { padding:14px 18px; font-size:11px; color:rgba(255,255,255,0.2); border-top:1px solid rgba(255,255,255,0.06); line-height:1.6; }
+    .main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; }
+    .topbar { background:var(--card); border-bottom:1px solid var(--border); padding:0 28px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
+    .topbar-title { font-size:16px; font-weight:700; color:var(--brown-dark); }
+    .topbar-sub { font-size:12px; color:var(--muted); margin-top:2px; }
+    .content { padding:24px 28px; }
+    .page-header { margin-bottom:20px; }
+    .page-header h1 { font-size:20px; font-weight:800; color:var(--brown-dark); }
+    .page-header p { font-size:13px; color:var(--muted); margin-top:4px; }
+    .card { background:var(--card); border-radius:10px; border:1px solid var(--border); overflow:hidden; margin-bottom:18px; }
+    .card-header { padding:13px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .card-title { font-size:13px; font-weight:700; color:var(--brown-dark); }
+    .card-sub { font-size:12px; color:var(--muted); }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:var(--bg); padding:9px 16px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); font-weight:700; border-bottom:1px solid var(--border); white-space:nowrap; }
+    td { padding:10px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:#FDFAF8; }
+    select { padding:8px 14px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:var(--card); color:var(--text); font-family:inherit; cursor:pointer; }
+    select:focus { outline:none; border-color:var(--yellow); }
+    .spinner-wrap { display:flex; align-items:center; justify-content:center; padding:40px; }
+    .spinner { width:22px; height:22px; border:2px solid var(--border); border-top-color:var(--brown); border-radius:50%; animation:spin 0.75s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .progress { height:6px; background:var(--border); border-radius:3px; overflow:hidden; width:100px; }
+    .progress-fill { height:100%; border-radius:3px; }
+    .ok   { color:var(--success); font-weight:700; }
+    .warn { color:#E05C2A; font-weight:700; }
+    .empty { text-align:center; padding:30px; color:var(--muted); font-size:13px; }
+    .kpi-row { display:grid; grid-template-columns:repeat(7,1fr); gap:12px; margin-bottom:20px; }
+    .kpi-box { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:14px 16px; text-align:center; }
+    .kpi-box-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+    .kpi-box-val { font-size:18px; font-weight:800; color:var(--brown-dark); }
+    .kpi-box-sub { font-size:11px; color:var(--muted); margin-top:3px; }
+    .select-bar { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+    .select-bar label { font-size:13px; color:var(--muted); font-weight:600; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="/static/logo_ABB.png" alt="Al Barid Bank"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <div class="sidebar-logo-text">AL BARID BANK</div>
+    <div class="sidebar-subtitle">Data Quality Platform</div>
+  </div>
+  <nav>
+    <a href="/" class="nav-item"><span class="nav-dot"></span> Dashboard</a>
+    <a href="/anomalies" class="nav-item"><span class="nav-dot"></span> Anomalies</a>
+    <a href="/decisions" class="nav-item"><span class="nav-dot"></span> Decisions Admin</a>
+    <a href="/profiling" class="nav-item active"><span class="nav-dot"></span> Profiling</a>
+  </nav>
+  <div class="sidebar-footer">Al Barid Bank &copy; 2025<br>Division Data &amp; BI</div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Data Profiling</div>
+      <div class="topbar-sub">Al Barid Bank / Qualite des donnees</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <div class="page-header">
+      <h1>Profiling des donnees</h1>
+      <p>Vue generale et metriques de completude par table et par colonne</p>
+    </div>
+
+    <!-- KPIs volumes -->
+    <div class="kpi-row" id="kpi-row">
+      <div class="kpi-box"><div class="kpi-box-label">Chargement</div><div class="spinner" style="margin:auto;"></div></div>
+    </div>
+
+    <!-- Selecteur table -->
+    <div class="select-bar">
+      <label>Analyser une table :</label>
+      <select id="table-select" onchange="loadTable()">
+        <option value="">-- Choisir une table --</option>
+        <option value="agences">agences</option>
+        <option value="clients">clients</option>
+        <option value="comptes">comptes</option>
+        <option value="cartes">cartes</option>
+        <option value="gabs">gabs</option>
+        <option value="transactions">transactions</option>
+        <option value="digital_usage">digital_usage</option>
+      </select>
+    </div>
+
+    <!-- Detail colonnes -->
+    <div class="card" id="detail-card" style="display:none;">
+      <div class="card-header">
+        <span class="card-title" id="detail-title">Profil detaille</span>
+        <span class="card-sub" id="detail-count"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Colonne</th>
+              <th>Type</th>
+              <th>Valeurs nulles</th>
+              <th>Completude</th>
+              <th>Progression</th>
+              <th>Valeurs distinctes</th>
+            </tr>
+          </thead>
+          <tbody id="detail-body">
+            <tr><td colspan="6"><div class="spinner-wrap"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function fmt(n) { return (n || 0).toLocaleString('fr-FR'); }
+
+async function api(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+async function loadOverview() {
+  try {
+    const data = await api('/api/profiling/summary');
+    const row = document.getElementById('kpi-row');
+    if (!data || !data.length) {
+      row.innerHTML = '<div class="kpi-box"><div class="kpi-box-label">Aucune table</div></div>';
+      return;
+    }
+    row.innerHTML = data.map(t =>
+      '<div class="kpi-box">' +
+      '<div class="kpi-box-label">' + t.table_name + '</div>' +
+      '<div class="kpi-box-val">' + fmt(t.row_count) + '</div>' +
+      '<div class="kpi-box-sub">lignes</div>' +
+      '</div>'
+    ).join('');
+  } catch(e) {
+    document.getElementById('kpi-row').innerHTML =
+      '<div class="kpi-box"><div class="kpi-box-label" style="color:var(--danger);">Erreur de chargement</div></div>';
+  }
+}
+
+async function loadTable() {
+  const table = document.getElementById('table-select').value;
+  const card = document.getElementById('detail-card');
+  if (!table) { card.style.display = 'none'; return; }
+
+  card.style.display = 'block';
+  document.getElementById('detail-title').textContent = table + ' — Profil des colonnes';
+  document.getElementById('detail-count').textContent = '';
+  document.getElementById('detail-body').innerHTML =
+    '<tr><td colspan="6"><div class="spinner-wrap"><div class="spinner"></div></div></td></tr>';
+
+  try {
+    const d = await api('/api/profiling/' + table);
+    document.getElementById('detail-count').textContent = fmt(d.row_count) + ' lignes';
+
+    if (!d.columns || !d.columns.length) {
+      document.getElementById('detail-body').innerHTML =
+        '<tr><td colspan="6" class="empty">Aucune colonne trouvee</td></tr>';
+      return;
+    }
+
+    document.getElementById('detail-body').innerHTML = d.columns.map(col => {
+      const pct = col.completude !== undefined ? col.completude : 100;
+      const cls = pct >= 95 ? 'ok' : 'warn';
+      const color = pct >= 95 ? 'var(--success)' : '#E05C2A';
+      return '<tr>' +
+        '<td><strong>' + (col.column_name || '—') + '</strong></td>' +
+        '<td style="color:var(--muted);font-size:12px;">' + (col.data_type || '—') + '</td>' +
+        '<td style="color:var(--muted);">' + fmt(col.null_count) + '</td>' +
+        '<td><span class="' + cls + '">' + pct + '%</span></td>' +
+        '<td><div class="progress"><div class="progress-fill" style="width:' + pct + '%;background:' + color + ';"></div></div></td>' +
+        '<td style="color:var(--muted);">' + fmt(col.distinct_count) + '</td>' +
+        '</tr>';
+    }).join('');
+  } catch(e) {
+    document.getElementById('detail-body').innerHTML =
+      '<tr><td colspan="6" class="empty" style="color:var(--danger);">Erreur : ' + e.message + '</td></tr>';
+  }
+}
+
+loadOverview();
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: barid_bank_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: barid_bank
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d barid_bank"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: barid_bank_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: barid_bank
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - ./data:/app/data
+      - ./scripts:/app/scripts
+      - ./src:/app/src
+    command: python scripts/load_to_postgres.py
+    profiles: ["load"]
+
+  profiling:
+    build: .
+    container_name: barid_bank_profiling
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: barid_bank
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - ./data:/app/data
+      - ./scripts:/app/scripts
+    command: python scripts/profiling.py
+    profiles: ["profiling"]
+
+  dbt:
+    build: .
+    container_name: barid_bank_dbt
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: barid_bank
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - ./dbt:/app/dbt
+    working_dir: /app/dbt
+    command: sh -c "dbt run && dbt test"
+    profiles: ["dbt"]
+
+  api:
+    build: .
+    container_name: barid_bank_api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: barid_bank
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    volumes:
+      - ./app:/app/app
+    ports:
+      - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    profiles: ["api"]
+
+volumes:
+  postgres_data:

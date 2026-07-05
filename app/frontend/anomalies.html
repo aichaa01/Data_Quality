@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anomalies — Al Barid Bank DQ</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brown:#6B4C3B; --brown-dark:#4A3328; --brown-mid:#7D5A4A;
+      --yellow:#E8A020; --yellow-light:#FFF3DC; --yellow-dark:#C8881A;
+      --bg:#F7F5F3; --card:#FFFFFF; --text:#2C1F18; --muted:#8B7B72; --border:#E8E0DA;
+      --success:#15803D; --danger:#B91C1C; --danger-light:#FEE2E2; --sidebar-w:240px;
+    }
+    body { font-family:'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); display:flex; min-height:100vh; font-size:14px; }
+    .sidebar { width:var(--sidebar-w); background:var(--brown-dark); display:flex; flex-direction:column; position:fixed; top:0; left:0; height:100vh; z-index:200; }
+    .sidebar-logo { padding:20px 18px 14px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .sidebar-logo img { width:145px; display:block; filter:brightness(0) invert(1); }
+    .sidebar-logo-text { color:#fff; font-size:15px; font-weight:800; display:none; }
+    .sidebar-subtitle { font-size:9px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1.2px; margin-top:7px; }
+    .sidebar nav { padding:10px 0; flex:1; }
+    .nav-item { display:flex; align-items:center; gap:10px; padding:11px 18px; color:rgba(255,255,255,0.65); text-decoration:none; font-size:13px; border-left:3px solid transparent; transition:all 0.18s; }
+    .nav-item:hover { background:rgba(255,255,255,0.07); color:#fff; border-left-color:var(--yellow); }
+    .nav-item.active { background:rgba(232,160,32,0.13); color:var(--yellow); border-left-color:var(--yellow); font-weight:600; }
+    .nav-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.3); flex-shrink:0; }
+    .nav-item.active .nav-dot { background:var(--yellow); }
+    .sidebar-footer { padding:14px 18px; font-size:11px; color:rgba(255,255,255,0.2); border-top:1px solid rgba(255,255,255,0.06); line-height:1.6; }
+    .main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; }
+    .topbar { background:var(--card); border-bottom:1px solid var(--border); padding:0 28px; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 1px 3px rgba(0,0,0,0.05); }
+    .topbar-title { font-size:16px; font-weight:700; color:var(--brown-dark); }
+    .content { padding:24px 28px; }
+    .card { background:var(--card); border-radius:10px; border:1px solid var(--border); overflow:hidden; margin-bottom:18px; }
+    .card-header { padding:13px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .card-title { font-size:13px; font-weight:700; color:var(--brown-dark); }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:13px; }
+    th { background:var(--bg); padding:9px 16px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:var(--muted); font-weight:700; border-bottom:1px solid var(--border); white-space:nowrap; }
+    td { padding:10px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tr:last-child td { border-bottom:none; }
+    tbody tr:hover td { background:#FDFAF8; }
+    .btn { display:inline-flex; align-items:center; gap:5px; padding:7px 14px; border-radius:6px; border:1px solid var(--border); background:var(--card); cursor:pointer; font-size:12px; font-weight:600; color:var(--text); transition:all 0.16s; font-family:inherit; white-space:nowrap; }
+    .btn:hover { background:var(--bg); }
+    .btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .btn-primary { background:var(--brown-dark); color:#fff; border-color:var(--brown-dark); }
+    .btn-primary:hover { background:var(--brown-mid); }
+    .btn-success { background:var(--success); color:#fff; border-color:var(--success); }
+    .btn-success:hover { background:#166534; }
+    .btn-danger { background:var(--danger-light); color:var(--danger); border-color:#FECACA; }
+    .btn-danger:hover { background:#FEE2E2; }
+    .badge { display:inline-flex; align-items:center; padding:2px 9px; border-radius:10px; font-size:10px; font-weight:700; white-space:nowrap; }
+    .badge-coherence  { background:#FEE2E2; color:#991B1B; }
+    .badge-unicite    { background:#FEF3C7; color:#92400E; }
+    .badge-exactitude { background:#DBEAFE; color:#1E40AF; }
+    .badge-fraicheur  { background:#EDE9FE; color:#5B21B6; }
+    .badge-completude { background:#D1FAE5; color:#065F46; }
+    .progress { height:5px; background:var(--border); border-radius:3px; overflow:hidden; width:80px; }
+    .progress-fill { height:100%; border-radius:3px; }
+    .filters-bar { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
+    select { padding:7px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:var(--card); color:var(--text); font-family:inherit; }
+    .bulk-bar { padding:12px 20px; border-top:1px solid var(--border); display:flex; gap:10px; align-items:center; background:var(--bg); }
+    .bulk-bar span { font-size:13px; color:var(--muted); }
+    .pagination { display:flex; align-items:center; gap:8px; padding:12px 20px; border-top:1px solid var(--border); justify-content:flex-end; }
+    .pag-info { font-size:12px; color:var(--muted); margin-right:auto; }
+    .loading { display:flex; align-items:center; justify-content:center; padding:40px; color:var(--muted); gap:10px; }
+    .spinner { width:18px; height:18px; border:2px solid var(--border); border-top-color:var(--brown); border-radius:50%; animation:spin 0.75s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .null-val { color:var(--danger); font-size:11px; font-weight:700; }
+    .top-badge { background:var(--yellow-light); color:var(--brown-dark); padding:4px 14px; border-radius:20px; font-size:12px; font-weight:700; border:1px solid var(--yellow); }
+    .info-bar { padding:10px 20px; background:var(--yellow-light); border-bottom:1px solid var(--yellow); font-size:12px; color:var(--brown); }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:500; display:flex; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(2px); }
+    .modal { background:var(--card); border-radius:12px; padding:26px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,0.2); animation:modal-in 0.2s ease; }
+    @keyframes modal-in { from{opacity:0;transform:scale(0.96) translateY(-6px);}to{opacity:1;transform:scale(1) translateY(0);} }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; padding-bottom:13px; border-bottom:1px solid var(--border); }
+    .modal-header h3 { font-size:15px; font-weight:700; color:var(--brown-dark); }
+    .modal-body { display:flex; flex-direction:column; gap:13px; margin-bottom:18px; }
+    .form-group { display:flex; flex-direction:column; gap:5px; }
+    .form-label { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+    .modal-footer { display:flex; gap:10px; justify-content:flex-end; padding-top:13px; border-top:1px solid var(--border); }
+    .record-info { font-size:11px; color:var(--muted); background:var(--bg); padding:8px 12px; border-radius:6px; font-family:monospace; }
+    select, textarea { width:100%; padding:8px 12px; border:1px solid var(--border); border-radius:6px; font-size:13px; background:var(--card); color:var(--text); font-family:inherit; }
+    textarea { resize:vertical; min-height:70px; }
+    td code { font-size:11px; color:var(--brown-dark); background:var(--bg); padding:1px 5px; border-radius:3px; }
+  </style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="/static/logo_ABB.png" alt="Al Barid Bank"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+    <div class="sidebar-logo-text">AL BARID BANK</div>
+    <div class="sidebar-subtitle">Data Quality Platform</div>
+  </div>
+  <nav>
+    <a href="/" class="nav-item"><span class="nav-dot"></span> Dashboard</a>
+    <a href="/anomalies" class="nav-item active"><span class="nav-dot"></span> Anomalies</a>
+    <a href="/decisions" class="nav-item"><span class="nav-dot"></span> Decisions Admin</a>
+    
+  </nav>
+  <div class="sidebar-footer">Al Barid Bank &copy; 2025<br>Division Data &amp; BI</div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title">Anomalies Detectees</div>
+    <span class="top-badge" id="total-badge">Chargement...</span>
+  </div>
+
+  <div class="content">
+    <div class="filters-bar">
+      <select id="filter-dimension" onchange="filterSummary()">
+        <option value="">Toutes les dimensions</option>
+        <option value="coherence">Coherence</option>
+        <option value="unicite">Unicite</option>
+        <option value="exactitude">Exactitude</option>
+        <option value="fraicheur">Fraicheur</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Regles metier — Resultats de validation</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Regle</th>
+              <th>Dimension</th>
+              <th>Anomalies</th>
+              <th>Taux</th>
+              <th>Progression</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="summary-body">
+            <tr><td colspan="6"><div class="loading"><div class="spinner"></div></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" id="detail-card" style="display:none;">
+      <div class="card-header">
+        <span class="card-title" id="detail-title">Detail</span>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="top-badge" id="detail-count"></span>
+          <button class="btn" onclick="closeDetail()">Fermer</button>
+        </div>
+      </div>
+      <div class="info-bar">Verifiez chaque enregistrement avant de prendre une decision.</div>
+      <div class="table-wrap">
+        <table>
+          <thead id="detail-thead"></thead>
+          <tbody id="detail-body"></tbody>
+        </table>
+      </div>
+      <div class="bulk-bar">
+        <span>Decision groupee pour toute la regle :</span>
+        <button class="btn btn-success" onclick="openBulkDecision('accepted')">Accepter tout</button>
+        <button class="btn btn-danger" onclick="openBulkDecision('rejected')">Rejeter tout</button>
+      </div>
+      <div class="pagination">
+        <span class="pag-info" id="pag-info"></span>
+        <button class="btn" id="btn-prev" onclick="prevPage()">Precedent</button>
+        <button class="btn" id="btn-next" onclick="nextPage()">Suivant</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="decision-modal" style="display:none;" onclick="handleOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Decision administrateur</h3>
+      <button class="btn" onclick="closeModal()">X</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Enregistrement concerne</label>
+        <div class="record-info" id="modal-record-info"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Decision</label>
+        <select id="modal-decision" onchange="onDecisionChange()">
+          <option value="accepted">Accepter — donnee valide malgre l'anomalie</option>
+          <option value="rejected">Rejeter — donnee invalide</option>
+        </select>
+      </div>
+      <div id="cascade-warning" style="display:none;background:#FEF3CD;border:1px solid #E8A020;border-radius:6px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#7A5A00;line-height:1.5;"></div>
+      <div class="form-group">
+        <label class="form-label">Severite</label>
+        <select id="modal-severity">
+          <option value="low">Faible</option>
+          <option value="medium" selected>Moyenne</option>
+          <option value="high">Elevee</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Commentaire (optionnel)</label>
+        <textarea id="modal-comment" placeholder="Justification de la decision..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" id="submit-btn" onclick="submitDecision()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DIM_COLORS = { coherence:'#C8102E', unicite:'#E8A020', exactitude:'#3B82F6', fraicheur:'#8B5CF6' };
+const DIM_LABELS = { coherence:'Coherence', unicite:'Unicite', exactitude:'Exactitude', fraicheur:'Fraicheur' };
+const RULE_ID_COL = {
+  TX_GAB_SANS_ID:'transaction_id', TX_NON_GAB_AVEC_ID:'transaction_id',
+  CARTE_ACTIVE_COMPTE_CLOTURE:'carte_id', TX_COMPTE_INEXISTANT:'transaction_id',
+  CLIENT_AGENCE_FERMEE:'client_id', COMPTE_CLIENT_INEXISTANT:'compte_id',
+  DIGITAL_CLIENT_INEXISTANT:'usage_id', CONTACT_INVALIDE:'client_id',
+};
+
+let allSummary = [], currentRule = null, currentOffset = 0, currentRecordId = null;
+const PAGE = 20;
+
+function fmt(n) { return (n||0).toLocaleString('fr-FR'); }
+
+async function api(url, opts) {
+  const r = await fetch(url, opts);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function loadSummary() {
+  try {
+    allSummary = await api('/api/anomalies/summary');
+    const total = allSummary.reduce((s,r) => s + r.anomaly_count, 0);
+    document.getElementById('total-badge').textContent = fmt(total) + ' anomalies';
+    renderSummary(allSummary);
+  } catch(e) {
+    document.getElementById('summary-body').innerHTML =
+      '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted);">Erreur de chargement</td></tr>';
+  }
+}
+
+function renderSummary(data) {
+  const tbody = document.getElementById('summary-body');
+  if (!data.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--muted);">Aucune anomalie</td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(r =>
+    '<tr>' +
+    '<td><code>' + r.rule_id + '</code></td>' +
+    '<td><span class="badge badge-' + r.dimension + '">' + (DIM_LABELS[r.dimension]||r.dimension) + '</span></td>' +
+    '<td><strong style="color:#E05C2A;">' + fmt(r.anomaly_count) + '</strong></td>' +
+    '<td>' + r.anomaly_pct + '%</td>' +
+    '<td style="min-width:130px;"><div style="display:flex;align-items:center;gap:8px;">' +
+    '<div class="progress"><div class="progress-fill" style="width:' + Math.min(r.anomaly_pct,100) + '%;background:' + (DIM_COLORS[r.dimension]||'#E8A020') + ';"></div></div>' +
+    '<span style="font-size:11px;color:var(--muted);">' + r.anomaly_pct + '%</span></div></td>' +
+    '<td><button class="btn btn-primary" onclick="openDetail(\'' + r.rule_id + '\',\'' + r.description + '\',' + r.anomaly_count + ')">Inspecter</button></td>' +
+    '</tr>'
+  ).join('');
+}
+
+function filterSummary() {
+  const dim = document.getElementById('filter-dimension').value;
+  renderSummary(dim ? allSummary.filter(r => r.dimension === dim) : allSummary);
+}
+
+async function openDetail(ruleId, desc, count) {
+  currentRule = ruleId; currentOffset = 0;
+  document.getElementById('detail-card').style.display = 'block';
+  document.getElementById('detail-title').textContent = desc;
+  document.getElementById('detail-count').textContent = fmt(count) + ' anomalies';
+  document.getElementById('detail-body').innerHTML =
+    '<tr><td colspan="20"><div class="loading"><div class="spinner"></div></div></td></tr>';
+  document.getElementById('detail-card').scrollIntoView({ behavior:'smooth', block:'start' });
+  await fetchDetail();
+}
+
+async function fetchDetail() {
+  try {
+    const data = await api('/api/anomalies/' + currentRule + '?limit=' + PAGE + '&offset=' + currentOffset);
+    if (!data.data || !data.data.length) {
+      document.getElementById('detail-body').innerHTML =
+        '<tr><td colspan="20" style="text-align:center;padding:30px;color:var(--muted);">Aucun enregistrement</td></tr>';
+      return;
+    }
+    const cols  = Object.keys(data.data[0]);
+    const idCol = RULE_ID_COL[currentRule] || cols[0];
+    document.getElementById('detail-thead').innerHTML =
+      '<tr>' + cols.map(c => '<th>' + c + '</th>').join('') + '<th style="min-width:180px;">Actions</th></tr>';
+    document.getElementById('detail-body').innerHTML = data.data.map(row => {
+      const recordId = row[idCol] !== undefined ? row[idCol] : row[cols[0]];
+      return '<tr>' +
+        cols.map(c => {
+          const v = row[c];
+          if (v === null || v === undefined) return '<td><span class="null-val">NULL</span></td>';
+          const s = String(v);
+          return '<td title="' + s + '">' + (s.length > 35 ? s.substring(0,35) + '...' : s) + '</td>';
+        }).join('') +
+        '<td><div style="display:flex;gap:6px;">' +
+        '<button class="btn btn-success" onclick="openModal(' + recordId + ',\'accepted\')">Accepter</button>' +
+        '<button class="btn btn-danger" onclick="openModal(' + recordId + ',\'rejected\')">Rejeter</button>' +
+        '</div></td></tr>';
+    }).join('');
+    const total = data.page.total;
+    const page  = Math.floor(currentOffset / PAGE) + 1;
+    const pages = Math.ceil(total / PAGE) || 1;
+    document.getElementById('pag-info').textContent = 'Page ' + page + ' / ' + pages + ' — ' + fmt(total) + ' anomalies';
+    document.getElementById('btn-prev').disabled = currentOffset === 0;
+    document.getElementById('btn-next').disabled = currentOffset + PAGE >= total;
+  } catch(e) {
+    document.getElementById('detail-body').innerHTML =
+      '<tr><td colspan="20" style="color:red;padding:20px;">Erreur: ' + e.message + '</td></tr>';
+  }
+}
+
+function prevPage() { currentOffset = Math.max(0, currentOffset - PAGE); fetchDetail(); }
+function nextPage() { currentOffset += PAGE; fetchDetail(); }
+function closeDetail() { document.getElementById('detail-card').style.display = 'none'; currentRule = null; }
+
+async function openModal(recordId, defaultDecision) {
+  currentRecordId = recordId;
+  document.getElementById('modal-decision').value = defaultDecision;
+  document.getElementById('modal-severity').value = 'medium';
+  document.getElementById('modal-comment').value  = '';
+  document.getElementById('modal-record-info').textContent = 'Regle: ' + currentRule + '  |  ID: ' + recordId;
+  document.getElementById('cascade-warning').style.display = 'none';
+  document.getElementById('cascade-warning').innerHTML = '';
+  document.getElementById('decision-modal').style.display = 'flex';
+  if (defaultDecision === 'rejected') await refreshCascadeWarning();
+}
+
+async function onDecisionChange() {
+  const decision = document.getElementById('modal-decision').value;
+  const box = document.getElementById('cascade-warning');
+  if (decision !== 'rejected') { box.style.display = 'none'; box.innerHTML = ''; return; }
+  await refreshCascadeWarning();
+}
+
+async function refreshCascadeWarning() {
+  const box = document.getElementById('cascade-warning');
+  try {
+    const preview = await api('/api/decisions/cascade-preview?rule_id=' + currentRule + '&record_id=' + currentRecordId);
+    if (preview.total > 0) {
+      const d = preview.details;
+      const parts = [];
+      if (d.comptes)       parts.push(d.comptes + ' compte(s)');
+      if (d.transactions)  parts.push(d.transactions + ' transaction(s)');
+      if (d.cartes)        parts.push(d.cartes + ' carte(s)');
+      if (d.digital_usage) parts.push(d.digital_usage + ' usage(s) digital(aux)');
+      box.innerHTML =
+        '<strong style="display:block;margin-bottom:4px;">Attention — rejet en cascade</strong>' +
+        'Rejeter cet enregistrement va aussi rejeter automatiquement : <strong>' +
+        parts.join(', ') + '</strong> (soit ' + preview.total + ' enregistrement(s) au total).';
+      box.style.display = 'block';
+    } else {
+      box.style.display = 'none';
+    }
+  } catch(e) { console.error('cascade preview:', e); }
+}
+
+function closeModal() { document.getElementById('decision-modal').style.display = 'none'; }
+function handleOverlay(e) { if (e.target === document.getElementById('decision-modal')) closeModal(); }
+
+async function submitDecision() {
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true; btn.textContent = 'Enregistrement...';
+  try {
+    const res = await api('/api/decisions/', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        rule_id:    currentRule,
+        table_name: currentRule,
+        record_id:  currentRecordId,
+        decision:   document.getElementById('modal-decision').value,
+        severity:   document.getElementById('modal-severity').value,
+        comment:    document.getElementById('modal-comment').value
+      })
+    });
+    closeModal();
+    if (res.cascade_count && res.cascade_count > 0) {
+      alert('Decision enregistree. ' + res.cascade_count + ' enregistrement(s) rejete(s) en cascade.');
+    }
+    await Promise.all([fetchDetail(), loadSummary()]);
+  } catch(e) { alert('Erreur: ' + e.message); }
+  finally { btn.disabled = false; btn.textContent = 'Confirmer'; }
+}
+
+async function openBulkDecision(decision) {
+  const label = decision === 'accepted' ? 'Accepter tout' : 'Rejeter tout';
+  if (!confirm('Confirmer "' + label + '" pour toutes les anomalies de la regle ' + currentRule + ' ?')) return;
+  try {
+    const res = await api('/api/decisions/bulk', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ rule_id:currentRule, decision, severity:'medium', comment:'Decision groupee' })
+    });
+    alert(res.processed + ' enregistrements traites.');
+    await Promise.all([fetchDetail(), loadSummary()]);
+  } catch(e) { alert('Erreur: ' + e.message); }
+}
+
+loadSummary();
+</script>
+</body>
+</html>
