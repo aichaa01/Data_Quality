@@ -92,5 +92,174 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     profiles: ["api"]
 
+  # ────────────────────────────────────────────────────────────────
+  #  MINIO — stockage objet (zone d'atterrissage des donnees)
+  #
+  #  L'ingestion suit un schema d'ecriture unique et de lecture unique :
+  #  un fichier complet arrive, il est lu une fois, puis archive. Ce mode
+  #  d'acces est precisement celui du stockage objet, standard des zones
+  #  d'atterrissage dans les plateformes de donnees.
+  #
+  #  Console : http://localhost:9001   (minioadmin / minioadmin123)
+  # ────────────────────────────────────────────────────────────────
+
+  minio:
+    image: minio/minio:latest
+    container_name: barid_minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+      # Cible de notification : le service pont (webhook)
+      MINIO_NOTIFY_WEBHOOK_ENABLE_pont: "on"
+      MINIO_NOTIFY_WEBHOOK_ENDPOINT_pont: "http://bridge:8500/minio-event"
+    ports:
+      - "9000:9000"   # API S3
+      - "9001:9001"   # Console web
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    profiles: ["airflow", "minio"]
+
+  # Creation des compartiments au demarrage
+  minio-init:
+    image: minio/mc:latest
+    container_name: barid_minio_init
+    depends_on:
+      minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      mc alias set local http://minio:9000 minioadmin minioadmin123;
+      mc mb --ignore-existing local/landing;
+      mc mb --ignore-existing local/archive;
+      mc mb --ignore-existing local/rejected;
+      mc event add --ignore-existing local/landing arn:minio:sqs::pont:webhook --event put --suffix .csv;
+      echo 'Compartiments prets + notification configuree sur landing';
+      exit 0;
+      "
+    profiles: ["airflow", "minio"]
+
+  # ────────────────────────────────────────────────────────────────
+  #  AIRFLOW — orchestration du pipeline
+  #  Profil : airflow   (docker-compose --profile airflow up -d)
+  #  Interface : http://localhost:8080   (admin / admin)
+  # ────────────────────────────────────────────────────────────────
+
+  airflow-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: barid_airflow_init
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment: &airflow-env
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://admin:admin123@postgres:5432/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+      AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
+      # API REST activee avec authentification basique (pour le pont MinIO)
+      AIRFLOW__API__AUTH_BACKENDS: "airflow.api.auth.backend.basic_auth"
+      # Connexion a la base metier (utilisee par les DAGs)
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: barid_bank
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      PYTHONPATH: /opt/project
+      # Stockage objet — zone d'atterrissage
+      AIRFLOW_CONN_MINIO: 'aws://minioadmin:minioadmin123@?endpoint_url=http%3A%2F%2Fminio%3A9000'
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+    volumes: &airflow-volumes
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./scripts:/opt/project/scripts
+      - ./dbt:/opt/project/dbt
+      - ./app:/opt/project/app
+      - ./data:/opt/project/data
+    working_dir: /opt/project
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        # Base de metadonnees Airflow (separee de la base metier)
+        PGPASSWORD=admin123 psql -h postgres -U admin -d barid_bank -tc \
+          "SELECT 1 FROM pg_database WHERE datname='airflow'" | grep -q 1 || \
+        PGPASSWORD=admin123 psql -h postgres -U admin -d barid_bank -c "CREATE DATABASE airflow"
+        airflow db migrate
+        airflow users create --username admin --password admin \
+          --firstname Admin --lastname User --role Admin --email admin@baridbank.ma || true
+        echo "Airflow initialise."
+    profiles: ["airflow"]
+
+  airflow-webserver:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: barid_airflow_web
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+    environment: *airflow-env
+    volumes: *airflow-volumes
+    working_dir: /opt/project
+    ports:
+      - "8080:8080"
+    command: airflow webserver
+    restart: unless-stopped
+    profiles: ["airflow"]
+
+  airflow-scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    container_name: barid_airflow_scheduler
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+    environment: *airflow-env
+    volumes: *airflow-volumes
+    working_dir: /opt/project
+    command: airflow scheduler
+    restart: unless-stopped
+    profiles: ["airflow"]
+
+  # ────────────────────────────────────────────────────────────────
+  #  PONT MinIO -> Airflow
+  #  Recoit les notifications de depot MinIO et declenche le DAG
+  #  d'ingestion via l'API REST d'Airflow. Rend l'ingestion reellement
+  #  evenementielle : deposer un fichier suffit a lancer le pipeline.
+  # ────────────────────────────────────────────────────────────────
+  bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile.bridge
+    container_name: barid_bridge
+    depends_on:
+      - airflow-webserver
+    environment:
+      AIRFLOW_API: "http://airflow-webserver:8080/api/v1"
+      AIRFLOW_USER: admin
+      AIRFLOW_PASS: admin
+      DAG_ID: ingestion_donnees
+    ports:
+      - "8500:8500"
+    command: uvicorn minio_airflow_bridge:app --host 0.0.0.0 --port 8500
+    restart: unless-stopped
+    profiles: ["airflow"]
+
 volumes:
   postgres_data:
+  minio_data:

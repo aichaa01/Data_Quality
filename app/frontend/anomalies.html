@@ -155,6 +155,15 @@
           <tbody id="detail-body"></tbody>
         </table>
       </div>
+      <div class="bulk-bar" style="border-top:1px solid var(--border);flex-wrap:wrap;">
+        <span style="font-weight:600;color:var(--brown-dark);">Contexte de reporting :</span>
+        <select id="contexte-select" style="min-width:280px;width:auto;">
+          <option value="">-- Choisir un contexte --</option>
+        </select>
+        <button class="btn" onclick="ouvrirNouveauContexte()">Nouveau contexte</button>
+        <span id="contexte-hint" style="font-size:12px;"></span>
+      </div>
+
       <div class="bulk-bar">
         <span>Decision groupee pour toute la regle :</span>
         <button class="btn btn-success" onclick="openBulkDecision('accepted')">Accepter tout</button>
@@ -205,6 +214,39 @@
     <div class="modal-footer">
       <button class="btn" onclick="closeModal()">Annuler</button>
       <button class="btn btn-primary" id="submit-btn" onclick="submitDecision()">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal nouveau contexte -->
+<div class="modal-overlay" id="contexte-modal" style="display:none;" onclick="handleContexteOverlay(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Nouveau contexte de reporting</h3>
+      <button class="btn" onclick="fermerNouveauContexte()">X</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Nom du contexte</label>
+        <input id="nouveau-contexte" placeholder="ex : ANALYSE RISQUE"
+               style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;background:var(--card);color:var(--text);"
+               oninput="verifierContexte()">
+        <span style="font-size:11px;color:var(--muted);">Le nom sera normalise automatiquement (majuscules, sans accents).</span>
+      </div>
+      <div id="contexte-preview" style="font-size:12px;color:var(--muted);"></div>
+      <div id="contexte-warning" style="display:none;background:#FEF3CD;border:1px solid #E8A020;border-radius:6px;padding:12px 14px;font-size:13px;color:#7A5A00;line-height:1.5;"></div>
+      <div class="form-group">
+        <label class="form-label">Description (optionnel)</label>
+        <textarea id="nouveau-contexte-desc" placeholder="Objectif de ce reporting..."></textarea>
+      </div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.5;">
+        Le modele n'a pas ete entraine sur ce contexte : ses suggestions y seront
+        moins fiables jusqu'a son reentrainement sur les decisions accumulees.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="fermerNouveauContexte()">Annuler</button>
+      <button class="btn btn-primary" id="btn-creer-contexte" onclick="creerContexte()">Creer</button>
     </div>
   </div>
 </div>
@@ -289,7 +331,7 @@ async function fetchDetail() {
     const cols  = Object.keys(data.data[0]);
     const idCol = RULE_ID_COL[currentRule] || cols[0];
     document.getElementById('detail-thead').innerHTML =
-      '<tr>' + cols.map(c => '<th>' + c + '</th>').join('') + '<th style="min-width:180px;">Actions</th></tr>';
+      '<tr>' + cols.map(c => '<th>' + c + '</th>').join('') + '<th style="min-width:330px;">Actions</th></tr>';
     document.getElementById('detail-body').innerHTML = data.data.map(row => {
       const recordId = row[idCol] !== undefined ? row[idCol] : row[cols[0]];
       return '<tr>' +
@@ -299,9 +341,11 @@ async function fetchDetail() {
           const s = String(v);
           return '<td title="' + s + '">' + (s.length > 35 ? s.substring(0,35) + '...' : s) + '</td>';
         }).join('') +
-        '<td><div style="display:flex;gap:6px;">' +
+        '<td><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' +
+        '<button class="btn" onclick="predire(' + recordId + ')" title="Suggestion du modele ML">Predire</button>' +
         '<button class="btn btn-success" onclick="openModal(' + recordId + ',\'accepted\')">Accepter</button>' +
         '<button class="btn btn-danger" onclick="openModal(' + recordId + ',\'rejected\')">Rejeter</button>' +
+        '<span id="pred-' + recordId + '" style="font-size:11px;font-weight:700;"></span>' +
         '</div></td></tr>';
     }).join('');
     const total = data.page.total;
@@ -313,6 +357,143 @@ async function fetchDetail() {
   } catch(e) {
     document.getElementById('detail-body').innerHTML =
       '<tr><td colspan="20" style="color:red;padding:20px;">Erreur: ' + e.message + '</td></tr>';
+  }
+}
+
+// ── Contextes de reporting ────────────────────────────────────────────────
+
+async function chargerContextes() {
+  try {
+    const data = await api('/api/prediction/contextes');
+    const sel = document.getElementById('contexte-select');
+    const actuel = sel.value;
+    sel.innerHTML = '<option value="">-- Choisir un contexte --</option>' +
+      (data.contextes || []).map(c => {
+        const marque = c.is_trained ? '' : ' (non entraine)';
+        return '<option value="' + c.contexte + '">' + c.contexte + marque + '</option>';
+      }).join('');
+    if (actuel) sel.value = actuel;
+  } catch(e) { console.warn('Contextes indisponibles', e); }
+}
+
+function ouvrirNouveauContexte() {
+  document.getElementById('nouveau-contexte').value = '';
+  document.getElementById('nouveau-contexte-desc').value = '';
+  document.getElementById('contexte-preview').textContent = '';
+  document.getElementById('contexte-warning').style.display = 'none';
+  document.getElementById('contexte-modal').style.display = 'flex';
+}
+
+function fermerNouveauContexte() {
+  document.getElementById('contexte-modal').style.display = 'none';
+}
+
+function handleContexteOverlay(e) {
+  if (e.target === document.getElementById('contexte-modal')) fermerNouveauContexte();
+}
+
+let verifTimer = null;
+function verifierContexte() {
+  clearTimeout(verifTimer);
+  verifTimer = setTimeout(async () => {
+    const saisie = document.getElementById('nouveau-contexte').value.trim();
+    const preview = document.getElementById('contexte-preview');
+    const warn = document.getElementById('contexte-warning');
+
+    if (!saisie) { preview.textContent = ''; warn.style.display = 'none'; return; }
+
+    try {
+      const res = await api('/api/prediction/contextes/verifier?contexte=' + encodeURIComponent(saisie));
+      if (!res.valide) {
+        preview.textContent = res.message || 'Contexte invalide.';
+        preview.style.color = 'var(--danger)';
+        warn.style.display = 'none';
+        return;
+      }
+
+      preview.innerHTML = 'Sera enregistre sous : <strong>' + res.normalise + '</strong>';
+      preview.style.color = 'var(--muted)';
+
+      if (res.existe) {
+        warn.innerHTML = '<strong>Ce contexte existe deja.</strong> Selectionnez-le dans la liste plutot que de le recreer.';
+        warn.style.display = 'block';
+      } else if (res.suggestion) {
+        warn.innerHTML = '<strong>Contexte proche detecte</strong><br>' +
+          'Vouliez-vous dire <strong>' + res.suggestion + '</strong> ? ' +
+          'Si oui, annulez et selectionnez-le dans la liste, afin d\'eviter un doublon.';
+        warn.style.display = 'block';
+      } else {
+        warn.style.display = 'none';
+      }
+    } catch(e) { console.warn('Verification impossible', e); }
+  }, 300);
+}
+
+async function creerContexte() {
+  const btn = document.getElementById('btn-creer-contexte');
+  const saisie = document.getElementById('nouveau-contexte').value.trim();
+  if (!saisie) return;
+
+  btn.disabled = true; btn.textContent = 'Creation...';
+  try {
+    const res = await api('/api/prediction/contextes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contexte: saisie,
+        description: document.getElementById('nouveau-contexte-desc').value
+      })
+    });
+    await chargerContextes();
+    document.getElementById('contexte-select').value = res.contexte;
+    fermerNouveauContexte();
+  } catch(e) {
+    alert('Erreur: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = 'Creer';
+  }
+}
+
+// ── Prediction ML ─────────────────────────────────────────────────────────
+
+async function predire(recordId) {
+  const contexte = document.getElementById('contexte-select').value;
+  const hint = document.getElementById('contexte-hint');
+  const span = document.getElementById('pred-' + recordId);
+
+  if (!contexte) {
+    hint.textContent = 'Choisissez d\'abord un contexte de reporting.';
+    hint.style.color = 'var(--danger)';
+    return;
+  }
+  hint.textContent = '';
+
+  span.textContent = '...';
+  span.style.color = 'var(--muted)';
+
+  try {
+    const res = await api('/api/prediction', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        rule_id: currentRule,
+        record_id: recordId,
+        contexte_reporting: contexte
+      })
+    });
+
+    const estRejet = res.prediction === 'rejected';
+    const pct = Math.round(res.confiance * 100);
+    const libelle = estRejet ? 'Rejet suggere' : 'Acceptation suggeree';
+    const alerte = res.contexte_connu ? '' : ' (contexte non entraine)';
+
+    span.textContent = libelle + ' — ' + pct + '%' + alerte;
+    span.style.color = estRejet ? 'var(--danger)' : 'var(--success)';
+    span.title = 'Probabilite de rejet : ' + res.proba_rejet +
+                 ' | Valeur metier : ' + res.valeur_metier;
+  } catch(e) {
+    span.textContent = 'Prediction indisponible';
+    span.style.color = 'var(--muted)';
   }
 }
 
@@ -402,6 +583,7 @@ async function openBulkDecision(decision) {
 }
 
 loadSummary();
+chargerContextes();
 </script>
 </body>
 </html>

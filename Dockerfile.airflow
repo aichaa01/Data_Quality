@@ -1,0 +1,30 @@
+# ============================================================
+#  Image Airflow — Al Barid Bank Data Quality Platform
+#
+#  Airflow orchestre directement les scripts du projet.
+#  L'image embarque les memes dependances que l'application
+#  (pandas, sqlalchemy, dbt, scikit-learn), ainsi que le
+#  fournisseur Amazon, qui permet de dialoguer avec un stockage
+#  objet compatible S3 — ici MinIO.
+# ============================================================
+
+FROM apache/airflow:2.9.2-python3.11
+
+USER root
+
+# Dependances systeme necessaires a psycopg2 et dbt
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends build-essential libpq-dev postgresql-client \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+USER airflow
+
+# Dependances du projet
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Acces au stockage objet (MinIO, compatible S3)
+RUN pip install --no-cache-dir \
+      "apache-airflow-providers-amazon==8.24.0" \
+      "boto3==1.34.100"

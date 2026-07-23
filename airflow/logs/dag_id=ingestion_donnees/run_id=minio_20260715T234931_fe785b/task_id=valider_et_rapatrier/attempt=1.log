@@ -1,0 +1,42 @@
+[2026-07-15T23:49:32.778+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-15T23:49:32.818+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ingestion_donnees.valider_et_rapatrier minio_20260715T234931_fe785b [queued]>
+[2026-07-15T23:49:32.825+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ingestion_donnees.valider_et_rapatrier minio_20260715T234931_fe785b [queued]>
+[2026-07-15T23:49:32.826+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-07-15T23:49:32.839+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): valider_et_rapatrier> on 2026-07-15 23:49:31.881274+00:00
+[2026-07-15T23:49:32.844+0000] {standard_task_runner.py:63} INFO - Started process 1272 to run task
+[2026-07-15T23:49:32.847+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'ingestion_donnees', 'valider_et_rapatrier', 'minio_20260715T234931_fe785b', '--job-id', '10', '--raw', '--subdir', 'DAGS_FOLDER/ingestion_donnees.py', '--cfg-path', '/tmp/tmpzx_h8hlu']
+[2026-07-15T23:49:32.849+0000] {standard_task_runner.py:91} INFO - Job 10: Subtask valider_et_rapatrier
+[2026-07-15T23:49:32.932+0000] {task_command.py:426} INFO - Running <TaskInstance: ingestion_donnees.valider_et_rapatrier minio_20260715T234931_fe785b [running]> on host 48af0895738b
+[2026-07-15T23:49:33.263+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='ingestion_donnees' AIRFLOW_CTX_TASK_ID='valider_et_rapatrier' AIRFLOW_CTX_EXECUTION_DATE='2026-07-15T23:49:31.881274+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='minio_20260715T234931_fe785b'
+[2026-07-15T23:49:33.265+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-15T23:49:33.814+0000] {logging_mixin.py:188} INFO - 1 objet(s) dans le compartiment d'atterrissage.
+[2026-07-15T23:49:33.815+0000] {logging_mixin.py:188} INFO - ==============================================================
+[2026-07-15T23:49:33.886+0000] {logging_mixin.py:188} INFO -   ECARTE   comptes (1).csv                  Entite indeterminee : le nom du fichier ne correspond a aucune entite connue (agences, clients, comptes, cartes, gabs, transactions, digital_usage).
+[2026-07-15T23:49:33.887+0000] {logging_mixin.py:188} INFO - ==============================================================
+[2026-07-15T23:49:33.887+0000] {logging_mixin.py:188} INFO - Retenus : 0  |  Ecartes : 1
+[2026-07-15T23:49:33.888+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-15T23:49:33.889+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/operators/python.py", line 252, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/ingestion_donnees.py", line 112, in valider_et_rapatrier
+    raise ValueError("Aucun fichier exploitable : la chaine s'interrompt.")
+ValueError: Aucun fichier exploitable : la chaine s'interrompt.
+[2026-07-15T23:49:33.910+0000] {taskinstance.py:1206} INFO - Marking task as UP_FOR_RETRY. dag_id=ingestion_donnees, task_id=valider_et_rapatrier, run_id=minio_20260715T234931_fe785b, execution_date=20260715T234931, start_date=20260715T234932, end_date=20260715T234933
+[2026-07-15T23:49:33.930+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 10 for task valider_et_rapatrier (Aucun fichier exploitable : la chaine s'interrompt.; 1272)
+[2026-07-15T23:49:33.944+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2026-07-15T23:49:33.973+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-07-15T23:49:33.977+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

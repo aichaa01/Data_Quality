@@ -1,0 +1,37 @@
+[2026-07-15T23:53:43.558+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-15T23:53:43.597+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ingestion_donnees.valider_et_rapatrier minio_20260715T235140_a3395c [queued]>
+[2026-07-15T23:53:43.606+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ingestion_donnees.valider_et_rapatrier minio_20260715T235140_a3395c [queued]>
+[2026-07-15T23:53:43.609+0000] {taskinstance.py:2306} INFO - Starting attempt 2 of 2
+[2026-07-15T23:53:43.622+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): valider_et_rapatrier> on 2026-07-15 23:51:40.777777+00:00
+[2026-07-15T23:53:43.627+0000] {standard_task_runner.py:63} INFO - Started process 1405 to run task
+[2026-07-15T23:53:43.630+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'ingestion_donnees', 'valider_et_rapatrier', 'minio_20260715T235140_a3395c', '--job-id', '13', '--raw', '--subdir', 'DAGS_FOLDER/ingestion_donnees.py', '--cfg-path', '/tmp/tmpvam9gqpp']
+[2026-07-15T23:53:43.633+0000] {standard_task_runner.py:91} INFO - Job 13: Subtask valider_et_rapatrier
+[2026-07-15T23:53:43.736+0000] {task_command.py:426} INFO - Running <TaskInstance: ingestion_donnees.valider_et_rapatrier minio_20260715T235140_a3395c [running]> on host 48af0895738b
+[2026-07-15T23:53:44.045+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='ingestion_donnees' AIRFLOW_CTX_TASK_ID='valider_et_rapatrier' AIRFLOW_CTX_EXECUTION_DATE='2026-07-15T23:51:40.777777+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='minio_20260715T235140_a3395c'
+[2026-07-15T23:53:44.046+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-15T23:53:44.581+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-15T23:53:44.583+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/operators/python.py", line 252, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/ingestion_donnees.py", line 81, in valider_et_rapatrier
+    raise ValueError("Compartiment d'atterrissage vide.")
+ValueError: Compartiment d'atterrissage vide.
+[2026-07-15T23:53:44.610+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=ingestion_donnees, task_id=valider_et_rapatrier, run_id=minio_20260715T235140_a3395c, execution_date=20260715T235140, start_date=20260715T235343, end_date=20260715T235344
+[2026-07-15T23:53:44.628+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 13 for task valider_et_rapatrier (Compartiment d'atterrissage vide.; 1405)
+[2026-07-15T23:53:44.647+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2026-07-15T23:53:44.672+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-07-15T23:53:44.679+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

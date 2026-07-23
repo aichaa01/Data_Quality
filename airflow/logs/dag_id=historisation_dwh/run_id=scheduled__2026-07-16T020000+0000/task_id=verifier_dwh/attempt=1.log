@@ -1,0 +1,148 @@
+[2026-07-17T09:19:05.500+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-17T09:19:05.576+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: historisation_dwh.verifier_dwh scheduled__2026-07-16T02:00:00+00:00 [queued]>
+[2026-07-17T09:19:05.592+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: historisation_dwh.verifier_dwh scheduled__2026-07-16T02:00:00+00:00 [queued]>
+[2026-07-17T09:19:05.594+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-07-17T09:19:05.623+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): verifier_dwh> on 2026-07-16 02:00:00+00:00
+[2026-07-17T09:19:05.635+0000] {standard_task_runner.py:63} INFO - Started process 6612 to run task
+[2026-07-17T09:19:05.640+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'historisation_dwh', 'verifier_dwh', 'scheduled__2026-07-16T02:00:00+00:00', '--job-id', '35', '--raw', '--subdir', 'DAGS_FOLDER/historisation_dwh.py', '--cfg-path', '/tmp/tmpbslpedye']
+[2026-07-17T09:19:05.644+0000] {standard_task_runner.py:91} INFO - Job 35: Subtask verifier_dwh
+[2026-07-17T09:19:05.799+0000] {task_command.py:426} INFO - Running <TaskInstance: historisation_dwh.verifier_dwh scheduled__2026-07-16T02:00:00+00:00 [running]> on host 48af0895738b
+[2026-07-17T09:19:05.977+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='historisation_dwh' AIRFLOW_CTX_TASK_ID='verifier_dwh' AIRFLOW_CTX_EXECUTION_DATE='2026-07-16T02:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-07-16T02:00:00+00:00'
+[2026-07-17T09:19:05.978+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-17T09:19:06.001+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-07-17T09:19:06.004+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/project/dbt && dbt test --profiles-dir . --target dev || true']
+[2026-07-17T09:19:06.017+0000] {subprocess.py:86} INFO - Output:
+[2026-07-17T09:19:08.515+0000] {subprocess.py:93} INFO - [0m09:19:08  Running with dbt=1.8.0
+[2026-07-17T09:19:08.838+0000] {subprocess.py:93} INFO - [0m09:19:08  Registered adapter: postgres=1.8.0
+[2026-07-17T09:19:10.176+0000] {subprocess.py:93} INFO - [0m09:19:10  Found 18 models, 3 snapshots, 38 data tests, 8 sources, 428 macros
+[2026-07-17T09:19:10.185+0000] {subprocess.py:93} INFO - [0m09:19:10
+[2026-07-17T09:19:10.581+0000] {subprocess.py:93} INFO - [0m09:19:10  Concurrency: 4 threads (target='dev')
+[2026-07-17T09:19:10.583+0000] {subprocess.py:93} INFO - [0m09:19:10
+[2026-07-17T09:19:10.602+0000] {subprocess.py:93} INFO - [0m09:19:10  1 of 38 START test accepted_values_stg_cartes_statut__active__expiree__bloquee . [RUN]
+[2026-07-17T09:19:10.604+0000] {subprocess.py:93} INFO - [0m09:19:10  2 of 38 START test accepted_values_stg_comptes_statut__actif__cloture__suspendu  [RUN]
+[2026-07-17T09:19:10.605+0000] {subprocess.py:93} INFO - [0m09:19:10  3 of 38 START test accepted_values_stg_digital_usage_canal__BBM__BaridNet ...... [RUN]
+[2026-07-17T09:19:10.607+0000] {subprocess.py:93} INFO - [0m09:19:10  4 of 38 START test accepted_values_stg_transactions_canal__agence__GAB__BBM__BaridNet  [RUN]
+[2026-07-17T09:19:10.878+0000] {subprocess.py:93} INFO - [0m09:19:10  2 of 38 PASS accepted_values_stg_comptes_statut__actif__cloture__suspendu ...... [[32mPASS[0m in 0.27s]
+[2026-07-17T09:19:10.890+0000] {subprocess.py:93} INFO - [0m09:19:10  1 of 38 PASS accepted_values_stg_cartes_statut__active__expiree__bloquee ....... [[32mPASS[0m in 0.28s]
+[2026-07-17T09:19:10.896+0000] {subprocess.py:93} INFO - [0m09:19:10  3 of 38 PASS accepted_values_stg_digital_usage_canal__BBM__BaridNet ............ [[32mPASS[0m in 0.28s]
+[2026-07-17T09:19:10.900+0000] {subprocess.py:93} INFO - [0m09:19:10  5 of 38 START test carte_active_compte_cloture ................................. [RUN]
+[2026-07-17T09:19:10.914+0000] {subprocess.py:93} INFO - [0m09:19:10  6 of 38 START test client_agence_fermee ........................................ [RUN]
+[2026-07-17T09:19:10.918+0000] {subprocess.py:93} INFO - [0m09:19:10  7 of 38 START test compte_client_inexistant .................................... [RUN]
+[2026-07-17T09:19:10.940+0000] {subprocess.py:93} INFO - [0m09:19:10  4 of 38 PASS accepted_values_stg_transactions_canal__agence__GAB__BBM__BaridNet  [[32mPASS[0m in 0.33s]
+[2026-07-17T09:19:10.959+0000] {subprocess.py:93} INFO - [0m09:19:10  8 of 38 START test contact_invalide ............................................ [RUN]
+[2026-07-17T09:19:11.088+0000] {subprocess.py:93} INFO - [0m09:19:11  5 of 38 FAIL 137 carte_active_compte_cloture ................................... [[31mFAIL 137[0m in 0.18s]
+[2026-07-17T09:19:11.106+0000] {subprocess.py:93} INFO - [0m09:19:11  9 of 38 START test digital_client_inexistant ................................... [RUN]
+[2026-07-17T09:19:11.129+0000] {subprocess.py:93} INFO - [0m09:19:11  8 of 38 FAIL 150 contact_invalide .............................................. [[31mFAIL 150[0m in 0.17s]
+[2026-07-17T09:19:11.132+0000] {subprocess.py:93} INFO - [0m09:19:11  7 of 38 FAIL 212 compte_client_inexistant ...................................... [[31mFAIL 212[0m in 0.20s]
+[2026-07-17T09:19:11.140+0000] {subprocess.py:93} INFO - [0m09:19:11  6 of 38 FAIL 100 client_agence_fermee .......................................... [[31mFAIL 100[0m in 0.22s]
+[2026-07-17T09:19:11.158+0000] {subprocess.py:93} INFO - [0m09:19:11  10 of 38 START test not_null_dim_agences_agence_id ............................. [RUN]
+[2026-07-17T09:19:11.162+0000] {subprocess.py:93} INFO - [0m09:19:11  11 of 38 START test not_null_dim_clients_client_id ............................. [RUN]
+[2026-07-17T09:19:11.164+0000] {subprocess.py:93} INFO - [0m09:19:11  12 of 38 START test not_null_dim_comptes_compte_id ............................. [RUN]
+[2026-07-17T09:19:11.337+0000] {subprocess.py:93} INFO - [0m09:19:11  9 of 38 FAIL 1000 digital_client_inexistant .................................... [[31mFAIL 1000[0m in 0.22s]
+[2026-07-17T09:19:11.359+0000] {subprocess.py:93} INFO - [0m09:19:11  13 of 38 START test not_null_fct_transactions_transaction_id ................... [RUN]
+[2026-07-17T09:19:11.412+0000] {subprocess.py:93} INFO - [0m09:19:11  11 of 38 PASS not_null_dim_clients_client_id ................................... [[32mPASS[0m in 0.24s]
+[2026-07-17T09:19:11.415+0000] {subprocess.py:93} INFO - [0m09:19:11  10 of 38 PASS not_null_dim_agences_agence_id ................................... [[32mPASS[0m in 0.25s]
+[2026-07-17T09:19:11.418+0000] {subprocess.py:93} INFO - [0m09:19:11  12 of 38 PASS not_null_dim_comptes_compte_id ................................... [[32mPASS[0m in 0.25s]
+[2026-07-17T09:19:11.435+0000] {subprocess.py:93} INFO - [0m09:19:11  14 of 38 START test not_null_stg_agences_agence_id ............................. [RUN]
+[2026-07-17T09:19:11.438+0000] {subprocess.py:93} INFO - [0m09:19:11  15 of 38 START test not_null_stg_cartes_carte_id ............................... [RUN]
+[2026-07-17T09:19:11.439+0000] {subprocess.py:93} INFO - [0m09:19:11  16 of 38 START test not_null_stg_clients_agence_id ............................. [RUN]
+[2026-07-17T09:19:11.600+0000] {subprocess.py:93} INFO - [0m09:19:11  13 of 38 PASS not_null_fct_transactions_transaction_id ......................... [[32mPASS[0m in 0.23s]
+[2026-07-17T09:19:11.617+0000] {subprocess.py:93} INFO - [0m09:19:11  17 of 38 START test not_null_stg_clients_cin ................................... [RUN]
+[2026-07-17T09:19:11.663+0000] {subprocess.py:93} INFO - [0m09:19:11  14 of 38 PASS not_null_stg_agences_agence_id ................................... [[32mPASS[0m in 0.22s]
+[2026-07-17T09:19:11.666+0000] {subprocess.py:93} INFO - [0m09:19:11  16 of 38 PASS not_null_stg_clients_agence_id ................................... [[32mPASS[0m in 0.21s]
+[2026-07-17T09:19:11.669+0000] {subprocess.py:93} INFO - [0m09:19:11  15 of 38 PASS not_null_stg_cartes_carte_id ..................................... [[32mPASS[0m in 0.22s]
+[2026-07-17T09:19:11.693+0000] {subprocess.py:93} INFO - [0m09:19:11  18 of 38 START test not_null_stg_clients_client_id ............................. [RUN]
+[2026-07-17T09:19:11.695+0000] {subprocess.py:93} INFO - [0m09:19:11  19 of 38 START test not_null_stg_comptes_compte_id ............................. [RUN]
+[2026-07-17T09:19:11.698+0000] {subprocess.py:93} INFO - [0m09:19:11  20 of 38 START test not_null_stg_digital_usage_usage_id ........................ [RUN]
+[2026-07-17T09:19:11.826+0000] {subprocess.py:93} INFO - [0m09:19:11  17 of 38 PASS not_null_stg_clients_cin ......................................... [[32mPASS[0m in 0.20s]
+[2026-07-17T09:19:11.856+0000] {subprocess.py:93} INFO - [0m09:19:11  21 of 38 START test not_null_stg_gabs_gab_id ................................... [RUN]
+[2026-07-17T09:19:11.919+0000] {subprocess.py:93} INFO - [0m09:19:11  19 of 38 PASS not_null_stg_comptes_compte_id ................................... [[32mPASS[0m in 0.21s]
+[2026-07-17T09:19:11.931+0000] {subprocess.py:93} INFO - [0m09:19:11  18 of 38 PASS not_null_stg_clients_client_id ................................... [[32mPASS[0m in 0.22s]
+[2026-07-17T09:19:11.938+0000] {subprocess.py:93} INFO - [0m09:19:11  20 of 38 PASS not_null_stg_digital_usage_usage_id .............................. [[32mPASS[0m in 0.23s]
+[2026-07-17T09:19:11.951+0000] {subprocess.py:93} INFO - [0m09:19:11  22 of 38 START test not_null_stg_transactions_montant .......................... [RUN]
+[2026-07-17T09:19:11.957+0000] {subprocess.py:93} INFO - [0m09:19:11  23 of 38 START test not_null_stg_transactions_transaction_id ................... [RUN]
+[2026-07-17T09:19:11.962+0000] {subprocess.py:93} INFO - [0m09:19:11  24 of 38 START test tx_compte_inexistant ....................................... [RUN]
+[2026-07-17T09:19:12.098+0000] {subprocess.py:93} INFO - [0m09:19:12  21 of 38 PASS not_null_stg_gabs_gab_id ......................................... [[32mPASS[0m in 0.24s]
+[2026-07-17T09:19:12.126+0000] {subprocess.py:93} INFO - [0m09:19:12  25 of 38 START test tx_gab_sans_id ............................................. [RUN]
+[2026-07-17T09:19:12.190+0000] {subprocess.py:93} INFO - [0m09:19:12  22 of 38 PASS not_null_stg_transactions_montant ................................ [[32mPASS[0m in 0.23s]
+[2026-07-17T09:19:12.206+0000] {subprocess.py:93} INFO - [0m09:19:12  23 of 38 PASS not_null_stg_transactions_transaction_id ......................... [[32mPASS[0m in 0.24s]
+[2026-07-17T09:19:12.222+0000] {subprocess.py:93} INFO - [0m09:19:12  26 of 38 START test tx_non_gab_avec_id ......................................... [RUN]
+[2026-07-17T09:19:12.232+0000] {subprocess.py:93} INFO - [0m09:19:12  24 of 38 FAIL 3000 tx_compte_inexistant ........................................ [[31mFAIL 3000[0m in 0.26s]
+[2026-07-17T09:19:12.234+0000] {subprocess.py:93} INFO - [0m09:19:12  27 of 38 START test unique_dim_agences_agence_id ............................... [RUN]
+[2026-07-17T09:19:12.267+0000] {subprocess.py:93} INFO - [0m09:19:12  28 of 38 START test unique_dim_clients_client_id ............................... [RUN]
+[2026-07-17T09:19:12.392+0000] {subprocess.py:93} INFO - [0m09:19:12  25 of 38 FAIL 498 tx_gab_sans_id ............................................... [[31mFAIL 498[0m in 0.26s]
+[2026-07-17T09:19:12.422+0000] {subprocess.py:93} INFO - [0m09:19:12  29 of 38 START test unique_dim_comptes_compte_id ............................... [RUN]
+[2026-07-17T09:19:12.478+0000] {subprocess.py:93} INFO - [0m09:19:12  27 of 38 PASS unique_dim_agences_agence_id ..................................... [[32mPASS[0m in 0.23s]
+[2026-07-17T09:19:12.485+0000] {subprocess.py:93} INFO - [0m09:19:12  26 of 38 FAIL 1502 tx_non_gab_avec_id .......................................... [[31mFAIL 1502[0m in 0.25s]
+[2026-07-17T09:19:12.506+0000] {subprocess.py:93} INFO - [0m09:19:12  30 of 38 START test unique_fct_transactions_transaction_id ..................... [RUN]
+[2026-07-17T09:19:12.509+0000] {subprocess.py:93} INFO - [0m09:19:12  31 of 38 START test unique_stg_agences_agence_id ............................... [RUN]
+[2026-07-17T09:19:12.514+0000] {subprocess.py:93} INFO - [0m09:19:12  28 of 38 PASS unique_dim_clients_client_id ..................................... [[32mPASS[0m in 0.22s]
+[2026-07-17T09:19:12.556+0000] {subprocess.py:93} INFO - [0m09:19:12  32 of 38 START test unique_stg_cartes_carte_id ................................. [RUN]
+[2026-07-17T09:19:12.726+0000] {subprocess.py:93} INFO - [0m09:19:12  29 of 38 PASS unique_dim_comptes_compte_id ..................................... [[32mPASS[0m in 0.30s]
+[2026-07-17T09:19:12.756+0000] {subprocess.py:93} INFO - [0m09:19:12  33 of 38 START test unique_stg_clients_cin ..................................... [RUN]
+[2026-07-17T09:19:12.812+0000] {subprocess.py:93} INFO - [0m09:19:12  31 of 38 PASS unique_stg_agences_agence_id ..................................... [[32mPASS[0m in 0.29s]
+[2026-07-17T09:19:12.826+0000] {subprocess.py:93} INFO - [0m09:19:12  34 of 38 START test unique_stg_clients_client_id ............................... [RUN]
+[2026-07-17T09:19:12.852+0000] {subprocess.py:93} INFO - [0m09:19:12  32 of 38 PASS unique_stg_cartes_carte_id ....................................... [[32mPASS[0m in 0.29s]
+[2026-07-17T09:19:12.879+0000] {subprocess.py:93} INFO - [0m09:19:12  35 of 38 START test unique_stg_comptes_compte_id ............................... [RUN]
+[2026-07-17T09:19:12.948+0000] {subprocess.py:93} INFO - [0m09:19:12  30 of 38 PASS unique_fct_transactions_transaction_id ........................... [[32mPASS[0m in 0.43s]
+[2026-07-17T09:19:12.967+0000] {subprocess.py:93} INFO - [0m09:19:12  36 of 38 START test unique_stg_digital_usage_usage_id .......................... [RUN]
+[2026-07-17T09:19:13.006+0000] {subprocess.py:93} INFO - [0m09:19:13  33 of 38 PASS unique_stg_clients_cin ........................................... [[32mPASS[0m in 0.24s]
+[2026-07-17T09:19:13.026+0000] {subprocess.py:93} INFO - [0m09:19:13  37 of 38 START test unique_stg_gabs_gab_id ..................................... [RUN]
+[2026-07-17T09:19:13.069+0000] {subprocess.py:93} INFO - [0m09:19:13  34 of 38 PASS unique_stg_clients_client_id ..................................... [[32mPASS[0m in 0.23s]
+[2026-07-17T09:19:13.090+0000] {subprocess.py:93} INFO - [0m09:19:13  35 of 38 PASS unique_stg_comptes_compte_id ..................................... [[32mPASS[0m in 0.21s]
+[2026-07-17T09:19:13.092+0000] {subprocess.py:93} INFO - [0m09:19:13  38 of 38 START test unique_stg_transactions_transaction_id ..................... [RUN]
+[2026-07-17T09:19:13.241+0000] {subprocess.py:93} INFO - [0m09:19:13  36 of 38 PASS unique_stg_digital_usage_usage_id ................................ [[32mPASS[0m in 0.27s]
+[2026-07-17T09:19:13.270+0000] {subprocess.py:93} INFO - [0m09:19:13  37 of 38 PASS unique_stg_gabs_gab_id ........................................... [[32mPASS[0m in 0.24s]
+[2026-07-17T09:19:13.399+0000] {subprocess.py:93} INFO - [0m09:19:13  38 of 38 PASS unique_stg_transactions_transaction_id ........................... [[32mPASS[0m in 0.30s]
+[2026-07-17T09:19:13.459+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.462+0000] {subprocess.py:93} INFO - [0m09:19:13  Finished running 38 data tests in 0 hours 0 minutes and 3.27 seconds (3.27s).
+[2026-07-17T09:19:13.601+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.604+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mCompleted with 8 errors and 0 warnings:[0m
+[2026-07-17T09:19:13.606+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.608+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test carte_active_compte_cloture (tests/carte_active_compte_cloture.sql)[0m
+[2026-07-17T09:19:13.612+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 137 results, configured to fail if != 0
+[2026-07-17T09:19:13.614+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.617+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/carte_active_compte_cloture.sql
+[2026-07-17T09:19:13.619+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.622+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test contact_invalide (tests/contact_invalide.sql)[0m
+[2026-07-17T09:19:13.625+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 150 results, configured to fail if != 0
+[2026-07-17T09:19:13.631+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.634+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/contact_invalide.sql
+[2026-07-17T09:19:13.637+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.639+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test compte_client_inexistant (tests/compte_client_inexistant.sql)[0m
+[2026-07-17T09:19:13.643+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 212 results, configured to fail if != 0
+[2026-07-17T09:19:13.646+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.650+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/compte_client_inexistant.sql
+[2026-07-17T09:19:13.653+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.655+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test client_agence_fermee (tests/client_agence_fermee.sql)[0m
+[2026-07-17T09:19:13.657+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 100 results, configured to fail if != 0
+[2026-07-17T09:19:13.660+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.663+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/client_agence_fermee.sql
+[2026-07-17T09:19:13.665+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.667+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test digital_client_inexistant (tests/digital_client_inexistant.sql)[0m
+[2026-07-17T09:19:13.669+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 1000 results, configured to fail if != 0
+[2026-07-17T09:19:13.672+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.676+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/digital_client_inexistant.sql
+[2026-07-17T09:19:13.679+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.682+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test tx_compte_inexistant (tests/tx_compte_inexistant.sql)[0m
+[2026-07-17T09:19:13.684+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 3000 results, configured to fail if != 0
+[2026-07-17T09:19:13.686+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.688+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/tx_compte_inexistant.sql
+[2026-07-17T09:19:13.690+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.694+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test tx_gab_sans_id (tests/tx_gab_sans_id.sql)[0m
+[2026-07-17T09:19:13.697+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 498 results, configured to fail if != 0
+[2026-07-17T09:19:13.700+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.702+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/tx_gab_sans_id.sql
+[2026-07-17T09:19:13.704+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.706+0000] {subprocess.py:93} INFO - [0m09:19:13  [31mFailure in test tx_non_gab_avec_id (tests/tx_non_gab_avec_id.sql)[0m
+[2026-07-17T09:19:13.709+0000] {subprocess.py:93} INFO - [0m09:19:13    Got 1502 results, configured to fail if != 0
+[2026-07-17T09:19:13.712+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.715+0000] {subprocess.py:93} INFO - [0m09:19:13    compiled code at target/compiled/barid_bank/tests/tx_non_gab_avec_id.sql
+[2026-07-17T09:19:13.718+0000] {subprocess.py:93} INFO - [0m09:19:13
+[2026-07-17T09:19:13.720+0000] {subprocess.py:93} INFO - [0m09:19:13  Done. PASS=30 WARN=0 ERROR=8 SKIP=0 TOTAL=38
+[2026-07-17T09:19:15.444+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-07-17T09:19:15.446+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-17T09:19:15.747+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=historisation_dwh, task_id=verifier_dwh, run_id=scheduled__2026-07-16T02:00:00+00:00, execution_date=20260716T020000, start_date=20260717T091905, end_date=20260717T091915
+[2026-07-17T09:19:15.820+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-07-17T09:19:15.860+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-07-17T09:19:15.866+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

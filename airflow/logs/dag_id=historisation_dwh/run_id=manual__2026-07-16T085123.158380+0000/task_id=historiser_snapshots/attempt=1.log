@@ -1,0 +1,38 @@
+[2026-07-16T08:51:38.503+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-16T08:51:38.553+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: historisation_dwh.historiser_snapshots manual__2026-07-16T08:51:23.158380+00:00 [queued]>
+[2026-07-16T08:51:38.562+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: historisation_dwh.historiser_snapshots manual__2026-07-16T08:51:23.158380+00:00 [queued]>
+[2026-07-16T08:51:38.563+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-07-16T08:51:38.582+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): historiser_snapshots> on 2026-07-16 08:51:23.158380+00:00
+[2026-07-16T08:51:38.589+0000] {standard_task_runner.py:63} INFO - Started process 1137 to run task
+[2026-07-16T08:51:38.593+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'historisation_dwh', 'historiser_snapshots', 'manual__2026-07-16T08:51:23.158380+00:00', '--job-id', '29', '--raw', '--subdir', 'DAGS_FOLDER/historisation_dwh.py', '--cfg-path', '/tmp/tmp2z5lkaop']
+[2026-07-16T08:51:38.597+0000] {standard_task_runner.py:91} INFO - Job 29: Subtask historiser_snapshots
+[2026-07-16T08:51:38.708+0000] {task_command.py:426} INFO - Running <TaskInstance: historisation_dwh.historiser_snapshots manual__2026-07-16T08:51:23.158380+00:00 [running]> on host 48af0895738b
+[2026-07-16T08:51:38.864+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='historisation_dwh' AIRFLOW_CTX_TASK_ID='historiser_snapshots' AIRFLOW_CTX_EXECUTION_DATE='2026-07-16T08:51:23.158380+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-07-16T08:51:23.158380+00:00'
+[2026-07-16T08:51:38.865+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-16T08:51:38.879+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-07-16T08:51:38.881+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/project/dbt && dbt snapshot --profiles-dir . --target dev']
+[2026-07-16T08:51:38.890+0000] {subprocess.py:86} INFO - Output:
+[2026-07-16T08:51:40.907+0000] {subprocess.py:93} INFO - [0m08:51:40  Running with dbt=1.8.0
+[2026-07-16T08:51:41.226+0000] {subprocess.py:93} INFO - [0m08:51:41  Registered adapter: postgres=1.8.0
+[2026-07-16T08:51:42.503+0000] {subprocess.py:93} INFO - [0m08:51:42  Found 18 models, 3 snapshots, 38 data tests, 8 sources, 428 macros
+[2026-07-16T08:51:42.511+0000] {subprocess.py:93} INFO - [0m08:51:42
+[2026-07-16T08:51:43.113+0000] {subprocess.py:93} INFO - [0m08:51:43  Concurrency: 4 threads (target='dev')
+[2026-07-16T08:51:43.115+0000] {subprocess.py:93} INFO - [0m08:51:43
+[2026-07-16T08:51:43.128+0000] {subprocess.py:93} INFO - [0m08:51:43  1 of 3 START snapshot dwh_metier.cartes_snapshot ............................... [RUN]
+[2026-07-16T08:51:43.130+0000] {subprocess.py:93} INFO - [0m08:51:43  2 of 3 START snapshot dwh_metier.clients_snapshot .............................. [RUN]
+[2026-07-16T08:51:43.132+0000] {subprocess.py:93} INFO - [0m08:51:43  3 of 3 START snapshot dwh_metier.comptes_snapshot .............................. [RUN]
+[2026-07-16T08:51:43.546+0000] {subprocess.py:93} INFO - [0m08:51:43  1 of 3 OK snapshotted dwh_metier.cartes_snapshot ............................... [[32mSELECT 5982[0m in 0.40s]
+[2026-07-16T08:51:43.548+0000] {subprocess.py:93} INFO - [0m08:51:43  2 of 3 OK snapshotted dwh_metier.clients_snapshot .............................. [[32mSELECT 4850[0m in 0.40s]
+[2026-07-16T08:51:43.551+0000] {subprocess.py:93} INFO - [0m08:51:43  3 of 3 OK snapshotted dwh_metier.comptes_snapshot .............................. [[32mSELECT 6600[0m in 0.41s]
+[2026-07-16T08:51:43.605+0000] {subprocess.py:93} INFO - [0m08:51:43
+[2026-07-16T08:51:43.607+0000] {subprocess.py:93} INFO - [0m08:51:43  Finished running 3 snapshots in 0 hours 0 minutes and 1.09 seconds (1.09s).
+[2026-07-16T08:51:43.701+0000] {subprocess.py:93} INFO - [0m08:51:43
+[2026-07-16T08:51:43.703+0000] {subprocess.py:93} INFO - [0m08:51:43  [32mCompleted successfully[0m
+[2026-07-16T08:51:43.705+0000] {subprocess.py:93} INFO - [0m08:51:43
+[2026-07-16T08:51:43.707+0000] {subprocess.py:93} INFO - [0m08:51:43  Done. PASS=3 WARN=0 ERROR=0 SKIP=0 TOTAL=3
+[2026-07-16T08:51:45.169+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-07-16T08:51:45.172+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-16T08:51:45.421+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=historisation_dwh, task_id=historiser_snapshots, run_id=manual__2026-07-16T08:51:23.158380+00:00, execution_date=20260716T085123, start_date=20260716T085138, end_date=20260716T085145
+[2026-07-16T08:51:45.506+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-07-16T08:51:45.575+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-07-16T08:51:45.588+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

@@ -1,0 +1,27 @@
+[2026-07-15T23:24:42.875+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-15T23:24:42.915+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ingestion_donnees.rapport minio_20260715T232347_2ebea9 [queued]>
+[2026-07-15T23:24:42.925+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ingestion_donnees.rapport minio_20260715T232347_2ebea9 [queued]>
+[2026-07-15T23:24:42.928+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-07-15T23:24:42.942+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): rapport> on 2026-07-15 23:23:47.947231+00:00
+[2026-07-15T23:24:42.948+0000] {standard_task_runner.py:63} INFO - Started process 517 to run task
+[2026-07-15T23:24:42.951+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'ingestion_donnees', 'rapport', 'minio_20260715T232347_2ebea9', '--job-id', '9', '--raw', '--subdir', 'DAGS_FOLDER/ingestion_donnees.py', '--cfg-path', '/tmp/tmpdq2rjet3']
+[2026-07-15T23:24:42.953+0000] {standard_task_runner.py:91} INFO - Job 9: Subtask rapport
+[2026-07-15T23:24:43.048+0000] {task_command.py:426} INFO - Running <TaskInstance: ingestion_donnees.rapport minio_20260715T232347_2ebea9 [running]> on host 48af0895738b
+[2026-07-15T23:24:43.325+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='ingestion_donnees' AIRFLOW_CTX_TASK_ID='rapport' AIRFLOW_CTX_EXECUTION_DATE='2026-07-15T23:23:47.947231+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='minio_20260715T232347_2ebea9'
+[2026-07-15T23:24:43.327+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-15T23:24:43.381+0000] {logging_mixin.py:188} INFO - ==============================================================
+[2026-07-15T23:24:43.382+0000] {logging_mixin.py:188} INFO - INGESTION TERMINEE
+[2026-07-15T23:24:43.382+0000] {logging_mixin.py:188} INFO - ==============================================================
+[2026-07-15T23:24:43.383+0000] {logging_mixin.py:188} INFO -   Fichiers integres : 1
+[2026-07-15T23:24:43.383+0000] {logging_mixin.py:188} INFO -   Fichiers ecartes  : 0
+[2026-07-15T23:24:43.383+0000] {logging_mixin.py:188} INFO -   Lignes chargees   : 3
+[2026-07-15T23:24:43.384+0000] {logging_mixin.py:188} INFO - Les anomalies detectees se presentent desormais dans l'application
+[2026-07-15T23:24:43.384+0000] {logging_mixin.py:188} INFO - comme des decisions en attente. La chaine prepare la decision,
+[2026-07-15T23:24:43.384+0000] {logging_mixin.py:188} INFO - elle ne se substitue pas au reporter.
+[2026-07-15T23:24:43.385+0000] {logging_mixin.py:188} INFO - ==============================================================
+[2026-07-15T23:24:43.385+0000] {python.py:237} INFO - Done. Returned value was: None
+[2026-07-15T23:24:43.385+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-15T23:24:43.400+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=ingestion_donnees, task_id=rapport, run_id=minio_20260715T232347_2ebea9, execution_date=20260715T232347, start_date=20260715T232442, end_date=20260715T232443
+[2026-07-15T23:24:43.445+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-07-15T23:24:43.467+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-07-15T23:24:43.471+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

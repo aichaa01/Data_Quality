@@ -1,0 +1,25 @@
+[2026-07-15T23:24:35.594+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-15T23:24:35.636+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ingestion_donnees.transformer_dbt minio_20260715T232347_2ebea9 [queued]>
+[2026-07-15T23:24:35.647+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ingestion_donnees.transformer_dbt minio_20260715T232347_2ebea9 [queued]>
+[2026-07-15T23:24:35.650+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-07-15T23:24:35.664+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): transformer_dbt> on 2026-07-15 23:23:47.947231+00:00
+[2026-07-15T23:24:35.669+0000] {standard_task_runner.py:63} INFO - Started process 495 to run task
+[2026-07-15T23:24:35.672+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'ingestion_donnees', 'transformer_dbt', 'minio_20260715T232347_2ebea9', '--job-id', '7', '--raw', '--subdir', 'DAGS_FOLDER/ingestion_donnees.py', '--cfg-path', '/tmp/tmppug4yhj6']
+[2026-07-15T23:24:35.674+0000] {standard_task_runner.py:91} INFO - Job 7: Subtask transformer_dbt
+[2026-07-15T23:24:35.781+0000] {task_command.py:426} INFO - Running <TaskInstance: ingestion_donnees.transformer_dbt minio_20260715T232347_2ebea9 [running]> on host 48af0895738b
+[2026-07-15T23:24:36.146+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='ingestion_donnees' AIRFLOW_CTX_TASK_ID='transformer_dbt' AIRFLOW_CTX_EXECUTION_DATE='2026-07-15T23:23:47.947231+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='minio_20260715T232347_2ebea9'
+[2026-07-15T23:24:36.147+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-15T23:24:36.154+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-07-15T23:24:36.156+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/project/dbt && dbt run --profiles-dir . --target prod && dbt test --profiles-dir . --target prod || true']
+[2026-07-15T23:24:36.168+0000] {subprocess.py:86} INFO - Output:
+[2026-07-15T23:24:38.902+0000] {subprocess.py:93} INFO - [0m23:24:38  Running with dbt=1.8.0
+[2026-07-15T23:24:38.915+0000] {subprocess.py:93} INFO - [0m23:24:38  Encountered an error:
+[2026-07-15T23:24:38.916+0000] {subprocess.py:93} INFO - Runtime Error
+[2026-07-15T23:24:38.917+0000] {subprocess.py:93} INFO -   The profile 'barid_bank' does not have a target named 'prod'. The valid target names for this profile are:
+[2026-07-15T23:24:38.917+0000] {subprocess.py:93} INFO -    - dev
+[2026-07-15T23:24:41.165+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2026-07-15T23:24:41.166+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-15T23:24:41.218+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=ingestion_donnees, task_id=transformer_dbt, run_id=minio_20260715T232347_2ebea9, execution_date=20260715T232347, start_date=20260715T232435, end_date=20260715T232441
+[2026-07-15T23:24:41.283+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-07-15T23:24:41.318+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-07-15T23:24:41.323+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

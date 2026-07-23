@@ -1,0 +1,20 @@
+[2026-07-21T21:16:16.856+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-21T21:16:16.920+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: reentrainement_modele.evaluer_declencheurs scheduled__2026-07-12T03:00:00+00:00 [queued]>
+[2026-07-21T21:16:16.931+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: reentrainement_modele.evaluer_declencheurs scheduled__2026-07-12T03:00:00+00:00 [queued]>
+[2026-07-21T21:16:16.932+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-07-21T21:16:16.950+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): evaluer_declencheurs> on 2026-07-12 03:00:00+00:00
+[2026-07-21T21:16:16.954+0000] {standard_task_runner.py:63} INFO - Started process 186 to run task
+[2026-07-21T21:16:16.957+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'reentrainement_modele', 'evaluer_declencheurs', 'scheduled__2026-07-12T03:00:00+00:00', '--job-id', '38', '--raw', '--subdir', 'DAGS_FOLDER/reentrainement_modele.py', '--cfg-path', '/tmp/tmps__hswha']
+[2026-07-21T21:16:16.959+0000] {standard_task_runner.py:91} INFO - Job 38: Subtask evaluer_declencheurs
+[2026-07-21T21:16:17.078+0000] {task_command.py:426} INFO - Running <TaskInstance: reentrainement_modele.evaluer_declencheurs scheduled__2026-07-12T03:00:00+00:00 [running]> on host 48af0895738b
+[2026-07-21T21:16:17.233+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='reentrainement_modele' AIRFLOW_CTX_TASK_ID='evaluer_declencheurs' AIRFLOW_CTX_EXECUTION_DATE='2026-07-12T03:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2026-07-12T03:00:00+00:00'
+[2026-07-21T21:16:17.235+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-21T21:16:18.494+0000] {logging_mixin.py:188} INFO - Contextes connus du modele : ['ANALYSE_GEOGRAPHIQUE', 'ANALYSE_TRANSACTIONNELLE', 'CAMPAGNE_CONTACT']
+[2026-07-21T21:16:18.552+0000] {logging_mixin.py:188} INFO - Nouvelles decisions depuis le dernier entrainement : 14102
+[2026-07-21T21:16:18.553+0000] {logging_mixin.py:188} INFO - Aucun declencheur : volume 14102/20000, aucun contexte nouveau atteignant 500 decisions.
+[2026-07-21T21:16:18.579+0000] {python.py:237} INFO - Done. Returned value was: False
+[2026-07-21T21:16:18.580+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-21T21:16:18.617+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=reentrainement_modele, task_id=evaluer_declencheurs, run_id=scheduled__2026-07-12T03:00:00+00:00, execution_date=20260712T030000, start_date=20260721T211616, end_date=20260721T211618
+[2026-07-21T21:16:18.657+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-07-21T21:16:18.698+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-07-21T21:16:18.703+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

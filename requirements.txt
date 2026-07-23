@@ -8,3 +8,5 @@ dbt-postgres==1.8.0
 dbt-core==1.8.0
 fastapi==0.111.0
 uvicorn==0.29.0
+scikit-learn==1.5.0
+joblib==1.4.2

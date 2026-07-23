@@ -1,0 +1,19 @@
+[2026-07-16T00:06:27.992+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-16T00:06:28.033+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: ingestion_donnees.archiver minio_20260716T000617_693416 [queued]>
+[2026-07-16T00:06:28.044+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: ingestion_donnees.archiver minio_20260716T000617_693416 [queued]>
+[2026-07-16T00:06:28.048+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 2
+[2026-07-16T00:06:28.066+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): archiver> on 2026-07-16 00:06:17.573826+00:00
+[2026-07-16T00:06:28.073+0000] {standard_task_runner.py:63} INFO - Started process 1802 to run task
+[2026-07-16T00:06:28.076+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'ingestion_donnees', 'archiver', 'minio_20260716T000617_693416', '--job-id', '17', '--raw', '--subdir', 'DAGS_FOLDER/ingestion_donnees.py', '--cfg-path', '/tmp/tmpzto2505j']
+[2026-07-16T00:06:28.080+0000] {standard_task_runner.py:91} INFO - Job 17: Subtask archiver
+[2026-07-16T00:06:28.184+0000] {task_command.py:426} INFO - Running <TaskInstance: ingestion_donnees.archiver minio_20260716T000617_693416 [running]> on host 48af0895738b
+[2026-07-16T00:06:28.537+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='ingestion_donnees' AIRFLOW_CTX_TASK_ID='archiver' AIRFLOW_CTX_EXECUTION_DATE='2026-07-16T00:06:17.573826+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='minio_20260716T000617_693416'
+[2026-07-16T00:06:28.538+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-16T00:06:28.910+0000] {logging_mixin.py:188} INFO -   archive : comptes.csv
+[2026-07-16T00:06:28.911+0000] {logging_mixin.py:188} INFO - 1 fichier(s) archive(s).
+[2026-07-16T00:06:28.912+0000] {python.py:237} INFO - Done. Returned value was: 1
+[2026-07-16T00:06:28.912+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-16T00:06:28.973+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=ingestion_donnees, task_id=archiver, run_id=minio_20260716T000617_693416, execution_date=20260716T000617, start_date=20260716T000628, end_date=20260716T000628
+[2026-07-16T00:06:29.017+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2026-07-16T00:06:29.058+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2026-07-16T00:06:29.065+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

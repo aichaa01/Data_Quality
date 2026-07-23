@@ -1,0 +1,40 @@
+[2026-07-16T08:43:33.228+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2026-07-16T08:43:33.282+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: historisation_dwh.construire_marts manual__2026-07-16T08:40:26.105269+00:00 [queued]>
+[2026-07-16T08:43:33.292+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: historisation_dwh.construire_marts manual__2026-07-16T08:40:26.105269+00:00 [queued]>
+[2026-07-16T08:43:33.333+0000] {taskinstance.py:2306} INFO - Starting attempt 2 of 2
+[2026-07-16T08:43:33.363+0000] {taskinstance.py:2330} INFO - Executing <Task(BashOperator): construire_marts> on 2026-07-16 08:40:26.105269+00:00
+[2026-07-16T08:43:33.375+0000] {standard_task_runner.py:63} INFO - Started process 834 to run task
+[2026-07-16T08:43:33.386+0000] {standard_task_runner.py:90} INFO - Running: ['airflow', 'tasks', 'run', 'historisation_dwh', 'construire_marts', 'manual__2026-07-16T08:40:26.105269+00:00', '--job-id', '25', '--raw', '--subdir', 'DAGS_FOLDER/historisation_dwh.py', '--cfg-path', '/tmp/tmpkbg7m109']
+[2026-07-16T08:43:33.393+0000] {standard_task_runner.py:91} INFO - Job 25: Subtask construire_marts
+[2026-07-16T08:43:33.539+0000] {task_command.py:426} INFO - Running <TaskInstance: historisation_dwh.construire_marts manual__2026-07-16T08:40:26.105269+00:00 [running]> on host 48af0895738b
+[2026-07-16T08:43:33.744+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data-quality' AIRFLOW_CTX_DAG_ID='historisation_dwh' AIRFLOW_CTX_TASK_ID='construire_marts' AIRFLOW_CTX_EXECUTION_DATE='2026-07-16T08:40:26.105269+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2026-07-16T08:40:26.105269+00:00'
+[2026-07-16T08:43:33.746+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2026-07-16T08:43:33.763+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2026-07-16T08:43:33.765+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'cd /opt/project/dbt && dbt run --profiles-dir . --target prod']
+[2026-07-16T08:43:33.777+0000] {subprocess.py:86} INFO - Output:
+[2026-07-16T08:43:35.670+0000] {subprocess.py:93} INFO - [0m08:43:35  Running with dbt=1.8.0
+[2026-07-16T08:43:35.682+0000] {subprocess.py:93} INFO - [0m08:43:35  Encountered an error:
+[2026-07-16T08:43:35.683+0000] {subprocess.py:93} INFO - Runtime Error
+[2026-07-16T08:43:35.683+0000] {subprocess.py:93} INFO -   The profile 'barid_bank' does not have a target named 'prod'. The valid target names for this profile are:
+[2026-07-16T08:43:35.684+0000] {subprocess.py:93} INFO -    - dev
+[2026-07-16T08:43:37.139+0000] {subprocess.py:97} INFO - Command exited with return code 2
+[2026-07-16T08:43:37.142+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2026-07-16T08:43:37.168+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.11/site-packages/airflow/operators/bash.py", line 243, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 2.
+[2026-07-16T08:43:37.179+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=historisation_dwh, task_id=construire_marts, run_id=manual__2026-07-16T08:40:26.105269+00:00, execution_date=20260716T084026, start_date=20260716T084333, end_date=20260716T084337
+[2026-07-16T08:43:37.246+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 25 for task construire_marts (Bash command failed. The command returned a non-zero exit code 2.; 834)
+[2026-07-16T08:43:37.259+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2026-07-16T08:43:37.300+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2026-07-16T08:43:37.308+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

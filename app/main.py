@@ -8,8 +8,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import dashboard, anomalies, decisions
+from app.routers import dashboard, anomalies, decisions, prediction
 from app.services.db import query
+from app.services import model as ml
+from app.services import contexts
 
 app = FastAPI(
     title="Al Barid Bank — Data Quality API",
@@ -54,6 +56,51 @@ def create_governance_tables():
             pipeline_run_id VARCHAR(100)
         )
         """,
+        """
+        CREATE TABLE IF NOT EXISTS model_predictions (
+            id                 SERIAL PRIMARY KEY,
+            table_origine      VARCHAR(100) NOT NULL,
+            record_id          INTEGER      NOT NULL,
+            rule_id            VARCHAR(100) NOT NULL,
+            contexte_reporting VARCHAR(100) NOT NULL,
+            valeur_metier      NUMERIC(15,2),
+            prediction_modele  VARCHAR(10)  NOT NULL CHECK (prediction_modele IN ('accepted', 'rejected')),
+            proba_rejet        NUMERIC(6,4),
+            contexte_connu     BOOLEAN      DEFAULT TRUE,
+            decision_reporter  VARCHAR(10)  CHECK (decision_reporter IN ('accepted', 'rejected')),
+            prediction_correcte BOOLEAN,
+            predicted_at       TIMESTAMP    DEFAULT NOW(),
+            decided_at         TIMESTAMP
+        )
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS reporting_contexts (
+            contexte     VARCHAR(100) PRIMARY KEY,
+            description  TEXT,
+            is_trained   BOOLEAN   DEFAULT FALSE,
+            usage_count  INTEGER   DEFAULT 0,
+            created_at   TIMESTAMP DEFAULT NOW(),
+            last_used_at TIMESTAMP
+        )
+        """,
+        """
+        CREATE TABLE IF NOT EXISTS model_training_runs (
+            id              SERIAL PRIMARY KEY,
+            trained_at      TIMESTAMP DEFAULT NOW(),
+            motif           TEXT,
+            n_lignes        INTEGER,
+            f1              NUMERIC(6,4),
+            precision_score NUMERIC(6,4),
+            rappel          NUMERIC(6,4),
+            deployed        BOOLEAN DEFAULT FALSE,
+            success         BOOLEAN DEFAULT TRUE,
+            note            TEXT
+        )
+        """,
+        "CREATE INDEX IF NOT EXISTS idx_predictions_record  ON model_predictions (table_origine, record_id)",
+        "CREATE INDEX IF NOT EXISTS idx_predictions_rule    ON model_predictions (rule_id)",
+        "CREATE INDEX IF NOT EXISTS idx_predictions_ctx     ON model_predictions (contexte_reporting)",
+        "CREATE INDEX IF NOT EXISTS idx_predictions_date    ON model_predictions (predicted_at)",
         "CREATE INDEX IF NOT EXISTS idx_decisions_rule_id   ON admin_decisions (rule_id)",
         "CREATE INDEX IF NOT EXISTS idx_decisions_decision   ON admin_decisions (decision)",
         "CREATE INDEX IF NOT EXISTS idx_decisions_decided_at ON admin_decisions (decided_at)",
@@ -68,6 +115,16 @@ def create_governance_tables():
             print(f"[STARTUP] DDL warning: {e}")
     print("[STARTUP] Tables de gouvernance verifiees.")
 
+
+@app.on_event("startup")
+def load_ml_model():
+    """Charge le modele de prediction au demarrage."""
+    ml.load_model()
+    # Amorce le referentiel avec les contextes d'entrainement du modele
+    if ml.is_ready():
+        contexts.initialiser(ml.contextes_connus())
+        print("[STARTUP] Referentiel des contextes initialise.")
+
 # CORS pour le frontend JS
 app.add_middleware(
     CORSMiddleware,
@@ -80,6 +137,7 @@ app.add_middleware(
 app.include_router(dashboard.router)
 app.include_router(anomalies.router)
 app.include_router(decisions.router)
+app.include_router(prediction.router)
 
 # Fichiers statiques (frontend)
 app.mount("/static", StaticFiles(directory="app/frontend"), name="static")
@@ -99,7 +157,6 @@ def index():
 @app.get("/anomalies")
 def anomalies_page():
     return FileResponse("app/frontend/anomalies.html", headers=NO_CACHE)
-
 
 @app.get("/decisions")
 def decisions_page():
